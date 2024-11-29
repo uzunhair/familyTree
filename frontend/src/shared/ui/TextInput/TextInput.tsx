@@ -5,9 +5,10 @@ type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
   placeholder?: string;
   className?: string;
   value?: string;
+  error?: any;
 }
 
-export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({ label, placeholder = label, className, ...props }, ref) => {
+export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({ label, placeholder = label, className, error, ...props }, ref) => {
   const id = useId();
 
   const [value, setValue] = useState(props.value || "");
@@ -20,24 +21,24 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({ label, plac
   };
 
   return (
-    <div className={className}>
-      {label && (
-        <label
-          htmlFor={`textField${id}`}
-          className="inline-block mb-2"
-        >
-          {label}
-        </label>
-      )}
-      <input
-        {...props}
-        id={`textField${id}`}
-        type="text"
-        placeholder={placeholder}
-        ref={ref}
-        value={value}
-        onChange={handleChange}
-        className="
+      <div className={className}>
+        {label && (
+            <label
+                htmlFor={`textField${id}`}
+                className="inline-block mb-2"
+            >
+              {label}
+            </label>
+        )}
+        <input
+            {...props}
+            id={`textField${id}`}
+            type="text"
+            placeholder={placeholder}
+            ref={ref}
+            value={value}
+            onChange={handleChange}
+            className="
           transition duration-200
           ease-in-out
           w-full
@@ -52,8 +53,9 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({ label, plac
           focus:border-primary
           focus:border-opacity-40
         "
-     />
-    </div>
+        />
+        {error && (<div className="mt-2 text-danger">{error.message}</div>)}
+      </div>
   );
 });
 

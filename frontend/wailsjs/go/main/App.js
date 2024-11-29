@@ -5,3 +5,15 @@
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
+
+export function LoadFromJSON(arg1) {
+  return window['go']['main']['App']['LoadFromJSON'](arg1);
+}
+
+export function SaveToJSON(arg1, arg2) {
+  return window['go']['main']['App']['SaveToJSON'](arg1, arg2);
+}
+
+export function SaveUserToJSONFile(arg1) {
+  return window['go']['main']['App']['SaveUserToJSONFile'](arg1);
+}

@@ -10,16 +10,18 @@
     "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.7",
     "file-saver": "^2.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.53.2"
+    "react-hook-form": "^7.53.2",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.3",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.15.0",
-    "@types/file-saver": "^2.0.7",
+    "@types/node": "^22.10.1",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
