@@ -1,0 +1,10 @@
+{
+  "name": "wails",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "wails dev",
+    "dev:browser": "wails dev -browser"
+  }
+}
