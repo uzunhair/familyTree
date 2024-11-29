@@ -1,10 +1,11 @@
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {TextInput} from "../TextInput";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+
+import {addUserSchema} from "./lib/schema/addUser";
 import {SaveUserToJSONFile} from "../../../../wailsjs/go/main/App";
 import {getInitials} from "../../lib/helpers/getInitials";
 import {transliterate} from "../../lib/helpers/transliterate";
-import {addUserSchema} from "./lib/schema/addUser";
+import {TextInput} from "../TextInput";
 
 type TInputs = {
   id: string;
@@ -28,7 +29,7 @@ const defaultValues = {
   friends: "",
   colleagues: "",
   familiar: "",
-}
+};
 
 export const AddUser = () => {
   const {
@@ -43,11 +44,11 @@ export const AddUser = () => {
     const newData = {
       ...data,
       id: `${Date.now()}_${transliterate(getInitials(data.fio))}`
-    }
-    console.log(newData)
+    };
+    console.log(newData);
     SaveUserToJSONFile(newData)
-        .then((item) => console.log("Add new person", item))
-        .catch((errors) => console.log("Errors: Add new person", errors))
+      .then((item) => console.log("Add new person", item))
+      .catch((errors) => console.log("Errors: Add new person", errors));
   };
 
   return (

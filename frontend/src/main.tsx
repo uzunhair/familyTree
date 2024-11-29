@@ -1,6 +1,8 @@
 import React from "react";
-import {createRoot} from "react-dom/client";
+
 import "./style.scss";
+import {createRoot} from "react-dom/client";
+
 import "./assets/styles/simplebar.css";
 import "./assets/styles/mobile-menu.css";
 import "./assets/styles/tippy.css";

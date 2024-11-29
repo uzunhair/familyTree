@@ -1,15 +1,19 @@
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import jsxA11Y from "eslint-plugin-jsx-a11y";
-import _import from "eslint-plugin-import";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import globals from "globals";
-import tsParser from "@typescript-eslint/parser";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
+
+import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import typescriptEslintParser from "@typescript-eslint/parser";
+import _import from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import";
+import jsxA11Y from "eslint-plugin-jsx-a11y";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import globals from "globals";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,6 +39,8 @@ export default [...fixupConfigRules(compat.extends(
     "jsx-a11y": fixupPluginRules(jsxA11Y),
     import: fixupPluginRules(_import),
     "@typescript-eslint": fixupPluginRules(typescriptEslint),
+    typescriptEslintPlugin,
+    importPlugin,
   },
 
   languageOptions: {
@@ -104,6 +110,37 @@ export default [...fixupConfigRules(compat.extends(
     camelcase: "off",
     "consistent-return": "off",
     "func-names": "off",
+    "import/order": [
+      "error",
+      {
+        groups: [
+          "builtin",
+          "external",
+          "internal",
+          ["sibling", "parent"],
+          "index",
+          "object",
+          "type",
+        ],
+        pathGroups: [
+          {
+            pattern: "react",
+            group: "external",
+            position: "before",
+          },
+          {
+            pattern: "@/**",
+            group: "internal",
+          },
+        ],
+        pathGroupsExcludedImportTypes: ["react"],
+        "newlines-between": "always",
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+      },
+    ],
     // "prettier/prettier": "error",
   },
 }];
