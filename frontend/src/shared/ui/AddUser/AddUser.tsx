@@ -1,8 +1,11 @@
+import {useEffect, useState} from "react";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import {TextInputSearch} from "src/shared/ui/TextInputSearch";
 
 import {addUserSchema} from "./lib/schema/addUser";
-import {SaveUserToJSONFile} from "../../../../wailsjs/go/main/App";
+import {SaveUserToJSONFile, GetAllPerson} from "../../../../wailsjs/go/main/App";
 import {getInitials} from "../../lib/helpers/getInitials";
 import {transliterate} from "../../lib/helpers/transliterate";
 import {TextInput} from "../TextInput";
@@ -45,11 +48,26 @@ export const AddUser = () => {
       ...data,
       id: `${Date.now()}_${transliterate(getInitials(data.fio))}`
     };
-    console.log(newData);
+    
     SaveUserToJSONFile(newData)
+      // eslint-disable-next-line no-console
       .then((item) => console.log("Add new person", item))
+      // eslint-disable-next-line no-console
       .catch((errors) => console.log("Errors: Add new person", errors));
   };
+  
+  const [persons, setPersons] = useState<string[]>([]);
+  
+  useEffect(() => {
+    GetAllPerson()
+      .then((item) => {
+        // eslint-disable-next-line no-console
+        console.log("GetAllPerson", item);
+        setPersons(item);
+      })
+      // eslint-disable-next-line no-console
+      .catch((errors) => console.log("Error: GetAllPerson", errors));
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -57,56 +75,56 @@ export const AddUser = () => {
         <Controller
           name="fio"
           control={control}
-          render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <TextInput label="ФИО" value={value} onChange={onChange} error={error} />
+          render={({field: {value, onChange}, fieldState: {error}}) => (
+            <TextInputSearch label="ФИО" value={value} onChange={onChange} error={error} data={persons} />
           )}
         />
         <Controller
           name="birthday"
           control={control}
-          render={({ field: { value, onChange } }) => (
+          render={({field: {value, onChange}}) => (
             <TextInput label="Дата рождения" value={value} onChange={onChange} className="mt-4"/>
           )}
         />
         <Controller
           name="wife"
           control={control}
-          render={({ field: { value, onChange } }) => (
+          render={({field: {value, onChange}}) => (
             <TextInput label="Жена" value={value} onChange={onChange} className="mt-4"/>
           )}
         />
         <Controller
           name="father"
           control={control}
-          render={({ field: { value, onChange } }) => (
+          render={({field: {value, onChange}}) => (
             <TextInput label="Отец" value={value} onChange={onChange} className="mt-4"/>
           )}
         />
         <Controller
           name="mother"
           control={control}
-          render={({ field: { value, onChange } }) => (
+          render={({field: {value, onChange}}) => (
             <TextInput label="Мать" value={value} onChange={onChange} className="mt-4"/>
           )}
         />
         <Controller
           name="friends"
           control={control}
-          render={({ field: { value, onChange } }) => (
+          render={({field: {value, onChange}}) => (
             <TextInput label="Друзья" value={value?.[0]} onChange={onChange} className="mt-4"/>
           )}
         />
         <Controller
           name="colleagues"
           control={control}
-          render={({ field: { value, onChange } }) => (
+          render={({field: {value, onChange}}) => (
             <TextInput label="Коллеги" value={value?.[0]} onChange={onChange} className="mt-4"/>
           )}
         />
         <Controller
           name="familiar"
           control={control}
-          render={({ field: { value, onChange } }) => (
+          render={({field: {value, onChange}}) => (
             <TextInput label="Знакомые" value={value?.[0]} onChange={onChange} className="mt-4"/>
           )}
         />

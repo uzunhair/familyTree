@@ -1,6 +1,6 @@
 import {ChangeEvent, InputHTMLAttributes, forwardRef, useId, useState} from "react";
 
-type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
+export type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   placeholder?: string;
   className?: string;

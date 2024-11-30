@@ -117,3 +117,17 @@ func (a *App) SaveUserToJSONFile(family *Person) Person {
 	fmt.Println("New person added successfully")
 	return newPerson
 }
+
+func (a *App) GetAllPerson() ([]string, error) {
+	people, err := a.LoadFromJSON(personsFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load persons: %w", err)
+	}
+
+	var names []string
+	for _, person := range people {
+		names = append(names, person.Fio)
+	}
+
+	return names, nil
+}
