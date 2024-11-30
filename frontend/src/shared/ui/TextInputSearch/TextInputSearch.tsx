@@ -1,18 +1,19 @@
-import {ChangeEvent, useEffect, useState} from "react";
-import {TextInput, TTextInput} from "src/shared/ui/TextInput";
+import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import styles from "./TextInputSearch.module.scss";
 
-export type TPersons = {
+export type TPersonId = {
   id: string;
   fio: string;
 }
 
 type TTextInputSearch = TTextInput & {
-  data: TPersons[];
+  data: TPersonId[];
+  onChange: (value:string) => void;
 }
 
-export const TextInputSearch = ({data, ...props}:TTextInputSearch) => {
-  const [filteredData, setFilteredData] = useState<TPersons[]>([]);
+export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
+  const [filteredData, setFilteredData] = useState<TPersonId[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -27,24 +28,32 @@ export const TextInputSearch = ({data, ...props}:TTextInputSearch) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     if (props.onChange) {
-      props.onChange(event);
+      props.onChange(event.target.value);
     }
   };
-  
+
   useEffect(() => {
     const filtered = data.filter(item =>
       item.fio.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(filtered);
   }, [searchTerm, data]);
-  
+
+  const handleItemClick = (event: MouseEvent, person: TPersonId) => {
+    event.preventDefault();
+    setSearchTerm(person.fio);
+    if (props.onChange) {
+      props.onChange(person.fio);
+    }
+  };
+
   return (
     <div className={styles.layout}>
-      <TextInput 
+      <TextInput
         {...props}
-        onChange={handleChange}       
+        onChange={handleChange}
         onFocus={handleFocus}
-        onBlur={handleBlur} 
+        onBlur={handleBlur}
       />
       {!!filteredData.length && searchTerm && isFocused && (
         <div className={styles.dropdown}>
@@ -55,7 +64,13 @@ export const TextInputSearch = ({data, ...props}:TTextInputSearch) => {
           <div className={styles.scroll}>
             {filteredData.map(person => {
               return (
-                <div key={person.id} className={styles.item}>
+                <div
+                  key={person.id}
+                  role="button"
+                  tabIndex={0}
+                  className={styles.item}
+                  onMouseDown={(event) => handleItemClick(event, person)}
+                >
                   {person.fio}
                 </div>
               );

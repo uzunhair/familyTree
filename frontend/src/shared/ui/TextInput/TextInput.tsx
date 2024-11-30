@@ -1,24 +1,37 @@
-import {ChangeEvent, InputHTMLAttributes, forwardRef, useId, useState} from "react";
+import { ChangeEvent, ChangeEventHandler, InputHTMLAttributes, forwardRef, useId, useState, useEffect } from "react";
 
 export type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   placeholder?: string;
   className?: string;
+  onChange: ChangeEventHandler<HTMLInputElement>;
   value?: string;
   error?: any;
 }
 
-export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({ label, placeholder = label, className, error, ...props }, ref) => {
+export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({ 
+  label, 
+  placeholder = label, 
+  className, 
+  onChange, 
+  error, 
+  value: propValue,
+  ...props
+}, ref) => {
   const id = useId();
 
-  const [value, setValue] = useState(props.value || "");
+  const [value, setValue] = useState(propValue || "");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
-    if (props.onChange) {
-      props.onChange(event);
+    if (onChange) {
+      onChange(event);
     }
   };
+
+  useEffect(() => {
+    setValue(propValue || "");
+  }, [propValue]);
 
   return (
     <div className={className}>
