@@ -3,6 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {TextInputSearch} from "src/shared/ui/TextInputSearch";
 import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
+import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {addUserSchema} from "./lib/schema/addUser";
 import {SaveUserToJSONFile, GetAllPerson} from "../../../../wailsjs/go/main/App";
 import {getInitials} from "../../lib/helpers/getInitials";
@@ -111,7 +112,7 @@ export const AddUser = () => {
           name="wife"
           control={control}
           render={({field: {value, onChange}, fieldState: {error}}) => (
-            <TextInputSearch
+            <TextInputSelect
               label="Жена"
               value={value}
               onChange={onChange}
