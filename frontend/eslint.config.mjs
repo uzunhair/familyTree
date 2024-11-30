@@ -1,6 +1,5 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
@@ -134,7 +133,7 @@ export default [...fixupConfigRules(compat.extends(
           },
         ],
         pathGroupsExcludedImportTypes: ["react"],
-        "newlines-between": "always",
+        "newlines-between": "never",
         alphabetize: {
           order: "asc",
           caseInsensitive: true,

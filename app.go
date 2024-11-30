@@ -119,16 +119,24 @@ func (a *App) SaveUserToJSONFile(family *Person) Person {
 	return newPerson
 }
 
-func (a *App) GetAllPerson() ([]string, error) {
+type PersonId struct {
+	ID  string `json:"id"`
+	Fio string `json:"fio"`
+}
+
+func (a *App) GetAllPerson() ([]PersonId, error) {
 	people, err := a.LoadFromJSON(personsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load persons: %w", err)
 	}
 
-	var names []string
+	var persons []PersonId
 	for _, person := range people {
-		names = append(names, person.Fio)
+		persons = append(persons, PersonId{
+			ID:  person.ID,
+			Fio: person.Fio,
+		})
 	}
 
-	return names, nil
+	return persons, nil
 }

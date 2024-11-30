@@ -28,6 +28,20 @@ export namespace main {
 	        this.familiar = source["familiar"];
 	    }
 	}
+	export class PersonId {
+	    id: string;
+	    fio: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new PersonId(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.fio = source["fio"];
+	    }
+	}
 
 }
 

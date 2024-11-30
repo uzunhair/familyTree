@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {TextInputSearch} from "src/shared/ui/TextInputSearch";
+import {TPersons} from "src/shared/ui/TextInputSearch/TextInputSearch";
 
 import {addUserSchema} from "./lib/schema/addUser";
 import {SaveUserToJSONFile, GetAllPerson} from "../../../../wailsjs/go/main/App";
@@ -45,11 +46,11 @@ export const AddUser = () => {
     resolver: yupResolver(addUserSchema),
   });
 
-  const [persons, setPersons] = useState<string[]>([]);
+  const [persons, setPersons] = useState<TPersons[]>([]);
   
   const onSubmit: SubmitHandler<TInputs> = (data) =>  {
     const isDuplicate = persons.some(
-      item => item.toLowerCase().trim() === data.fio.toLowerCase().trim()
+      item => item.fio.toLowerCase().trim() === data.fio.toLowerCase().trim()
     );
 
     if (isDuplicate) {
@@ -109,8 +110,15 @@ export const AddUser = () => {
         <Controller
           name="wife"
           control={control}
-          render={({field: {value, onChange}}) => (
-            <TextInput label="Жена" value={value} onChange={onChange} className="mt-4"/>
+          render={({field: {value, onChange}, fieldState: {error}}) => (
+            <TextInputSearch
+              label="Жена"
+              value={value}
+              onChange={onChange}
+              error={error}
+              data={persons}
+              className="mt-4"
+            />
           )}
         />
         <Controller

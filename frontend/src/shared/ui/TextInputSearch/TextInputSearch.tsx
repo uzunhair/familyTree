@@ -1,15 +1,18 @@
 import {ChangeEvent, useEffect, useState} from "react";
-
 import {TextInput, TTextInput} from "src/shared/ui/TextInput";
-
 import styles from "./TextInputSearch.module.scss";
 
+export type TPersons = {
+  id: string;
+  fio: string;
+}
+
 type TTextInputSearch = TTextInput & {
-  data: string[];
+  data: TPersons[];
 }
 
 export const TextInputSearch = ({data, ...props}:TTextInputSearch) => {
-  const [filteredData, setFilteredData] = useState<string[]>([]);
+  const [filteredData, setFilteredData] = useState<TPersons[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -30,7 +33,7 @@ export const TextInputSearch = ({data, ...props}:TTextInputSearch) => {
   
   useEffect(() => {
     const filtered = data.filter(item =>
-      item.toLowerCase().includes(searchTerm.toLowerCase())
+      item.fio.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(filtered);
   }, [searchTerm, data]);
@@ -48,10 +51,15 @@ export const TextInputSearch = ({data, ...props}:TTextInputSearch) => {
           <div className="p-2 px-3 font-medium">
             {filteredData.length} совпадений
           </div>
-          <div className="h-px bg-slate-200/60 dark:bg-darkmode-400">
-          </div>
+          <div className="h-px bg-slate-200/60 dark:bg-darkmode-400" />
           <div className={styles.scroll}>
-            {filteredData.map(person => <div key={person} className={styles.item}>{person}</div>)}
+            {filteredData.map(person => {
+              return (
+                <div key={person.id} className={styles.item}>
+                  {person.fio}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
