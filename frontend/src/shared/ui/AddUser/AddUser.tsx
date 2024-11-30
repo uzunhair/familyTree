@@ -1,16 +1,27 @@
 import {useEffect, useState} from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import {setPersonId} from "src/shared/lib/helpers/setPersonId";
 import {TextInputSearch} from "src/shared/ui/TextInputSearch";
 import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
 import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {addUserSchema} from "./lib/schema/addUser";
 import {SaveUserToJSONFile, GetAllPerson} from "../../../../wailsjs/go/main/App";
-import {getInitials} from "../../lib/helpers/getInitials";
-import {transliterate} from "../../lib/helpers/transliterate";
 import {TextInput} from "../TextInput";
 
 type TInputs = {
+  id: string;
+  fio: string;
+  birthday: string;
+  wife: TPersonId;
+  father: TPersonId;
+  mother: TPersonId;
+  friends: string;
+  colleagues: string;
+  familiar: string;
+}
+
+type TInputsOut = {
   id: string;
   fio: string;
   birthday: string;
@@ -26,9 +37,18 @@ const defaultValues = {
   id: "",
   fio: "",
   birthday: "",
-  wife: "",
-  father: "",
-  mother: "",
+  wife: {
+    id: "",
+    fio: ""
+  },
+  father: {
+    id: "",
+    fio: ""
+  },
+  mother: {
+    id: "",
+    fio: ""
+  },
   friends: "",
   colleagues: "",
   familiar: "",
@@ -40,6 +60,7 @@ export const AddUser = () => {
     handleSubmit,
     control,
     setError,
+    watch,
   } = useForm<TInputs>({
     defaultValues,
     resolver: yupResolver(addUserSchema),
@@ -60,12 +81,13 @@ export const AddUser = () => {
       return;
     }
 
-    const newData = {
+    const newData: TInputsOut = {
       ...data,
-      id: `${Date.now()}_${transliterate(getInitials(data.fio))}`
+      id: setPersonId(data.fio),
+      wife: data.wife.id,
+      father: data.father.id,
+      mother: data.mother.id,
     };
-    
-    console.log("newData", newData);
 
     // SaveUserToJSONFile(newData)
     // // eslint-disable-next-line no-console
@@ -125,15 +147,29 @@ export const AddUser = () => {
         <Controller
           name="father"
           control={control}
-          render={({field: {value, onChange}}) => (
-            <TextInput label="Отец" value={value} onChange={onChange} className="mt-4"/>
+          render={({field: {value, onChange}, fieldState: {error}}) => (
+            <TextInputSelect
+              label="Отец"
+              value={value}
+              onChange={onChange}
+              error={error}
+              data={persons}
+              className="mt-4"
+            />
           )}
         />
         <Controller
           name="mother"
           control={control}
-          render={({field: {value, onChange}}) => (
-            <TextInput label="Мать" value={value} onChange={onChange} className="mt-4"/>
+          render={({field: {value, onChange}, fieldState: {error}}) => (
+            <TextInputSelect
+              label="Мать"
+              value={value}
+              onChange={onChange}
+              error={error}
+              data={persons}
+              className="mt-4"
+            />
           )}
         />
         <Controller

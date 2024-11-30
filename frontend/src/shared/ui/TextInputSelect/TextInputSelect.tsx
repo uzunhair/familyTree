@@ -1,18 +1,16 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import {setPersonId} from "src/shared/lib/helpers/setPersonId";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
-import styles from "./TextInputSearch.module.scss";
+import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
+import styles from "../TextInputSearch/TextInputSearch.module.scss";
 
-export type TPersonId = {
-  id: string;
-  fio: string;
-}
-
-type TTextInputSelect = TTextInput & {
+type TTextInputSelect = Omit<TTextInput, "onChange" | "value"> & {
   data: TPersonId[];
-  onChange: (value:string) => void;
+  value: TPersonId;
+  onChange: (value:TPersonId) => void;
 }
 
-export const TextInputSelect = ({ data, ...props }: TTextInputSelect) => {
+export const TextInputSelect = ({ data, value, ...props }: TTextInputSelect) => {
   const [filteredData, setFilteredData] = useState<TPersonId[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
@@ -26,9 +24,14 @@ export const TextInputSelect = ({ data, ...props }: TTextInputSelect) => {
   };
   
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    const value = event.target.value;
+    setSearchTerm(value);
     if (props.onChange) {
-      props.onChange(event.target.value);
+      const person = {
+        id: setPersonId(value),
+        fio: value,
+      };
+      props.onChange(person);
     }
   };
 
@@ -43,7 +46,7 @@ export const TextInputSelect = ({ data, ...props }: TTextInputSelect) => {
     event.preventDefault();
     setSearchTerm(person.fio);
     if (props.onChange) {
-      props.onChange(person.fio);
+      props.onChange(person);
     }
   };
 
@@ -51,6 +54,7 @@ export const TextInputSelect = ({ data, ...props }: TTextInputSelect) => {
     <div className={styles.layout}>
       <TextInput
         {...props}
+        value={value.fio}
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

@@ -6,7 +6,7 @@ export function GetAllPerson():Promise<Array<main.PersonId>>;
 
 export function Greet(arg1:string):Promise<string>;
 
-export function LoadFromJSON(arg1:string):Promise<Array<main.Person>>;
+export function LoadFromJSON():Promise<Array<main.Person>>;
 
 export function SaveToJSON(arg1:string,arg2:Array<main.Person>):Promise<void>;
 

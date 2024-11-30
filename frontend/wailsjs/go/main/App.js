@@ -10,8 +10,8 @@ export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
-export function LoadFromJSON(arg1) {
-  return window['go']['main']['App']['LoadFromJSON'](arg1);
+export function LoadFromJSON() {
+  return window['go']['main']['App']['LoadFromJSON']();
 }
 
 export function SaveToJSON(arg1, arg2) {

@@ -62,7 +62,7 @@ func (a *App) SaveToJSON(filename string, people []Person) error {
 }
 
 // LoadFromJSON загружает семейное древо из файла JSON
-func (a *App) LoadFromJSON(filename string) ([]Person, error) {
+func (a *App) LoadFromJSON() ([]Person, error) {
 	// Read the file's content
 	byteValue, err := os.ReadFile(personsFilePath)
 	if err != nil {
@@ -90,7 +90,7 @@ func (a *App) SaveUserToJSONFile(family *Person) Person {
 	filename := personsFilePath
 
 	// Load existing data from the file
-	people, err := app.LoadFromJSON(filename)
+	people, err := app.LoadFromJSON()
 	if err != nil {
 		log.Fatalf("failed to load data: %s", err)
 	}
@@ -125,7 +125,7 @@ type PersonId struct {
 }
 
 func (a *App) GetAllPerson() ([]PersonId, error) {
-	people, err := a.LoadFromJSON(personsFilePath)
+	people, err := a.LoadFromJSON()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load persons: %w", err)
 	}

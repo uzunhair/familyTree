@@ -3,7 +3,7 @@ export function getInitials(fullName: string) {
   const nameParts = fullName.split(" ");
 
   // Извлекаем первые буквы каждой части
-  const initials = nameParts.map(part => part.charAt(0).toUpperCase());
+  const initials = nameParts.map(part => part.charAt(0).toLowerCase());
 
   // Объединяем первые буквы в строку
   return initials.join("");
