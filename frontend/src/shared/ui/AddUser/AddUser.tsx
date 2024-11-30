@@ -32,31 +32,45 @@ const defaultValues = {
   friends: "",
   colleagues: "",
   familiar: "",
+  uniqueUser: true,
 };
 
 export const AddUser = () => {
   const {
     handleSubmit,
-    control
+    control,
+    setError
   } = useForm<TInputs>({
     defaultValues,
     resolver: yupResolver(addUserSchema),
   });
 
+  const [persons, setPersons] = useState<string[]>([]);
+  
   const onSubmit: SubmitHandler<TInputs> = (data) =>  {
+    const isDuplicate = persons.some(
+      item => item.toLowerCase().trim() === data.fio.toLowerCase().trim()
+    );
+
+    if (isDuplicate) {
+      setError("fio", {
+        type: "manual",
+        message: "Поле дублируется, введите другое значение",
+      });
+      return;
+    }
+
     const newData = {
       ...data,
       id: `${Date.now()}_${transliterate(getInitials(data.fio))}`
     };
-    
+
     SaveUserToJSONFile(newData)
-      // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
       .then((item) => console.log("Add new person", item))
-      // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
       .catch((errors) => console.log("Errors: Add new person", errors));
   };
-  
-  const [persons, setPersons] = useState<string[]>([]);
   
   useEffect(() => {
     GetAllPerson()
@@ -76,7 +90,13 @@ export const AddUser = () => {
           name="fio"
           control={control}
           render={({field: {value, onChange}, fieldState: {error}}) => (
-            <TextInputSearch label="ФИО" value={value} onChange={onChange} error={error} data={persons} />
+            <TextInputSearch 
+              label="ФИО" 
+              value={value} 
+              onChange={onChange}
+              error={error}
+              data={persons}
+            />
           )}
         />
         <Controller

@@ -97,6 +97,7 @@ func (a *App) SaveUserToJSONFile(family *Person) Person {
 
 	// Add a new person to the slice
 	newPerson := Person{
+		ID:         family.ID,
 		Fio:        family.Fio,
 		Birthday:   family.Birthday,
 		Wife:       family.Wife,
