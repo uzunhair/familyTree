@@ -16,7 +16,7 @@ type TInputs = {
   wife: TPersonId;
   father: TPersonId;
   mother: TPersonId;
-  friends: string;
+  friends: TPersonId[];
   colleagues: string;
   familiar: string;
 }
@@ -28,7 +28,7 @@ type TInputsOut = {
   wife: string;
   father: string;
   mother: string;
-  friends: string;
+  friends: string[];
   colleagues: string;
   familiar: string;
 }
@@ -49,7 +49,7 @@ const defaultValues = {
     id: "",
     fio: ""
   },
-  friends: "",
+  friends: [],
   colleagues: "",
   familiar: "",
   createPerson: [],
@@ -83,28 +83,39 @@ export const AddUser = () => {
     }
 
     const newPersons: TPersonId[] = [];
+
     const personData = (value: TPersonId) => {
+      if (!value) return { id: "" };
+
       if (value.id) {
         return value;
-      } else if (value.fio) {
+      }
+
+      if (value.fio) {
         const item = { ...value, id: setPersonId(value.fio) };
         newPersons.push(item);
         return item;
       }
-      return {id: ""};
-    };
 
-    const wife = personData(data.wife);
-    const father = personData(data.father);
-    const mother = personData(data.mother);
+      return { id: "" };
+    };
+    
+    const personData2 = (value: TPersonId[]) => {
+      return value.map((item) => personData(item).id);
+    };
 
     const mainPerson: TInputsOut = {
       ...data,
       id: setPersonId(data.fio),
-      wife: wife.id,
-      father: father.id,
-      mother: mother.id,
+      wife: personData(data.wife).id,
+      father: personData(data.father).id,
+      mother: personData(data.mother).id,
+      friends: personData2(data.friends),
     };
+
+    console.log("data", data);
+    console.log("_mainPerson", mainPerson);
+    console.log("_newPersons", newPersons);
 
     // SaveUserToJSONFile(mainPerson)
     // // eslint-disable-next-line no-console
@@ -192,8 +203,16 @@ export const AddUser = () => {
         <Controller
           name="friends"
           control={control}
-          render={({field: {value, onChange}}) => (
-            <TextInput label="Друзья" value={value?.[0]} onChange={onChange} className="mt-4"/>
+          render={({field: {value, onChange, }, fieldState: {error}}) => (
+            <TextInputSelect
+              label="Друзья"
+              value={value}
+              onChange={onChange}
+              error={error}
+              data={persons}
+              className="mt-4"
+              multiple
+            />
           )}
         />
         <Controller
