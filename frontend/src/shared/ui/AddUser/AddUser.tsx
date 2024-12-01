@@ -52,7 +52,7 @@ const defaultValues = {
   friends: "",
   colleagues: "",
   familiar: "",
-  uniqueUser: true,
+  createPerson: [],
 };
 
 export const AddUser = () => {
@@ -60,6 +60,7 @@ export const AddUser = () => {
     handleSubmit,
     control,
     setError,
+    setValue,
     watch,
   } = useForm<TInputs>({
     defaultValues,
@@ -81,15 +82,31 @@ export const AddUser = () => {
       return;
     }
 
-    const newData: TInputsOut = {
-      ...data,
-      id: setPersonId(data.fio),
-      wife: data.wife.id,
-      father: data.father.id,
-      mother: data.mother.id,
+    const newPersons: TPersonId[] = [];
+    const personData = (value: TPersonId) => {
+      if (value.id) {
+        return value;
+      } else if (value.fio) {
+        const item = { ...value, id: setPersonId(value.fio) };
+        newPersons.push(item);
+        return item;
+      }
+      return {id: ""};
     };
 
-    // SaveUserToJSONFile(newData)
+    const wife = personData(data.wife);
+    const father = personData(data.father);
+    const mother = personData(data.mother);
+
+    const mainPerson: TInputsOut = {
+      ...data,
+      id: setPersonId(data.fio),
+      wife: wife.id,
+      father: father.id,
+      mother: mother.id,
+    };
+
+    // SaveUserToJSONFile(mainPerson)
     // // eslint-disable-next-line no-console
     //   .then((item) => console.log("Add new person", item))
     // // eslint-disable-next-line no-console
@@ -133,7 +150,7 @@ export const AddUser = () => {
         <Controller
           name="wife"
           control={control}
-          render={({field: {value, onChange}, fieldState: {error}}) => (
+          render={({field: {value, onChange, }, fieldState: {error}}) => (
             <TextInputSelect
               label="Жена"
               value={value}

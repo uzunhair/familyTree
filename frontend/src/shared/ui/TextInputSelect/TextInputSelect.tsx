@@ -1,5 +1,4 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
-import {setPersonId} from "src/shared/lib/helpers/setPersonId";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
 import styles from "../TextInputSearch/TextInputSearch.module.scss";
@@ -28,7 +27,7 @@ export const TextInputSelect = ({ data, value, ...props }: TTextInputSelect) => 
     setSearchTerm(value);
     if (props.onChange) {
       const person = {
-        id: setPersonId(value),
+        id: "",
         fio: value,
       };
       props.onChange(person);
