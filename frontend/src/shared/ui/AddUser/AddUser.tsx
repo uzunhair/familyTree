@@ -64,10 +64,10 @@ export const AddUser = () => {
     resolver: yupResolver(addUserSchema),
   });
 
-  const [persons, setPersons] = useState<TPersonId[]>([]);
+  const [apiPersons, setApiPersons] = useState<TPersonId[]>([]);
   
   const onSubmit: SubmitHandler<TInputs> = (data) =>  {
-    const isDuplicate = persons.some(
+    const isDuplicate = apiPersons.some(
       item => item.fio.toLowerCase().trim() === data.fio.toLowerCase().trim()
     );
 
@@ -81,7 +81,7 @@ export const AddUser = () => {
 
     const newPersons: TPersonId[] = [];
 
-    const personData = (value: TPersonId) => {
+    const personObject = (value: TPersonId) => {
       if (!value) return { id: "" };
 
       if (value.id) {
@@ -97,19 +97,19 @@ export const AddUser = () => {
       return { id: "" };
     };
     
-    const personData2 = (value: TPersonId[]) => {
-      return value.map((item) => personData(item).id);
+    const personArray = (value: TPersonId[]) => {
+      return value.map((item) => personObject(item).id);
     };
 
     const mainPerson: TInputsOut = {
       ...data,
       id: setPersonId(data.fio),
-      wife: personData2(data.wife),
-      father: personData(data.father).id,
-      mother: personData(data.mother).id,
-      friends: personData2(data.friends),
-      colleagues: personData2(data.colleagues),
-      familiar: personData2(data.familiar),
+      wife: personArray(data.wife),
+      father: personObject(data.father).id,
+      mother: personObject(data.mother).id,
+      friends: personArray(data.friends),
+      colleagues: personArray(data.colleagues),
+      familiar: personArray(data.familiar),
     };
 
     console.log("data", data);
@@ -128,7 +128,7 @@ export const AddUser = () => {
       .then((item) => {
         // eslint-disable-next-line no-console
         console.log("GetAllPerson", item);
-        setPersons(item);
+        setApiPersons(item);
       })
       // eslint-disable-next-line no-console
       .catch((errors) => console.log("Error: GetAllPerson", errors));
@@ -146,7 +146,7 @@ export const AddUser = () => {
               value={value} 
               onChange={onChange}
               error={error}
-              data={persons}
+              data={apiPersons}
             />
           )}
         />
@@ -166,7 +166,7 @@ export const AddUser = () => {
               value={value}
               onChange={onChange}
               error={error}
-              data={persons}
+              data={apiPersons}
               className="mt-4"
               multiple
             />
@@ -181,7 +181,7 @@ export const AddUser = () => {
               value={value}
               onChange={onChange}
               error={error}
-              data={persons}
+              data={apiPersons}
               className="mt-4"
             />
           )}
@@ -195,7 +195,7 @@ export const AddUser = () => {
               value={value}
               onChange={onChange}
               error={error}
-              data={persons}
+              data={apiPersons}
               className="mt-4"
             />
           )}
@@ -209,7 +209,7 @@ export const AddUser = () => {
               value={value}
               onChange={onChange}
               error={error}
-              data={persons}
+              data={apiPersons}
               className="mt-4"
               multiple
             />
@@ -224,7 +224,7 @@ export const AddUser = () => {
               value={value}
               onChange={onChange}
               error={error}
-              data={persons}
+              data={apiPersons}
               className="mt-4"
               multiple
             />
@@ -239,7 +239,7 @@ export const AddUser = () => {
               value={value}
               onChange={onChange}
               error={error}
-              data={persons}
+              data={apiPersons}
               className="mt-4"
               multiple
             />
