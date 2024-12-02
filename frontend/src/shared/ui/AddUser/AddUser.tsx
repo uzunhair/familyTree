@@ -13,34 +13,31 @@ type TInputs = {
   id: string;
   fio: string;
   birthday: string;
-  wife: TPersonId;
+  wife: TPersonId[];
   father: TPersonId;
   mother: TPersonId;
   friends: TPersonId[];
-  colleagues: string;
-  familiar: string;
+  colleagues: TPersonId[];
+  familiar: TPersonId[];
 }
 
 type TInputsOut = {
   id: string;
   fio: string;
   birthday: string;
-  wife: string;
+  wife: string[];
   father: string;
   mother: string;
   friends: string[];
-  colleagues: string;
-  familiar: string;
+  colleagues: string[];
+  familiar: string[];
 }
 
 const defaultValues = {
   id: "",
   fio: "",
   birthday: "",
-  wife: {
-    id: "",
-    fio: ""
-  },
+  wife: [],
   father: {
     id: "",
     fio: ""
@@ -50,8 +47,8 @@ const defaultValues = {
     fio: ""
   },
   friends: [],
-  colleagues: "",
-  familiar: "",
+  colleagues: [],
+  familiar: [],
   createPerson: [],
 };
 
@@ -107,10 +104,12 @@ export const AddUser = () => {
     const mainPerson: TInputsOut = {
       ...data,
       id: setPersonId(data.fio),
-      wife: personData(data.wife).id,
+      wife: personData2(data.wife),
       father: personData(data.father).id,
       mother: personData(data.mother).id,
       friends: personData2(data.friends),
+      colleagues: personData2(data.colleagues),
+      familiar: personData2(data.familiar),
     };
 
     console.log("data", data);
@@ -169,6 +168,7 @@ export const AddUser = () => {
               error={error}
               data={persons}
               className="mt-4"
+              multiple
             />
           )}
         />
@@ -218,21 +218,63 @@ export const AddUser = () => {
         <Controller
           name="colleagues"
           control={control}
-          render={({field: {value, onChange}}) => (
-            <TextInput label="Коллеги" value={value?.[0]} onChange={onChange} className="mt-4"/>
+          render={({field: {value, onChange, }, fieldState: {error}}) => (
+            <TextInputSelect
+              label="Коллеги"
+              value={value}
+              onChange={onChange}
+              error={error}
+              data={persons}
+              className="mt-4"
+              multiple
+            />
           )}
         />
         <Controller
           name="familiar"
           control={control}
-          render={({field: {value, onChange}}) => (
-            <TextInput label="Знакомые" value={value?.[0]} onChange={onChange} className="mt-4"/>
+          render={({field: {value, onChange, }, fieldState: {error}}) => (
+            <TextInputSelect
+              label="Знакомые"
+              value={value}
+              onChange={onChange}
+              error={error}
+              data={persons}
+              className="mt-4"
+              multiple
+            />
           )}
         />
         <div className="mt-5 text-right">
           <button
             type="button"
-            className="transition duration-200 border shadow-sm inline-flex items-center justify-center py-2 px-5 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed border-secondary text-slate-500 dark:border-darkmode-100/40 dark:text-slate-300 [&:hover:not(:disabled)]:bg-secondary/20 [&:hover:not(:disabled)]:dark:bg-darkmode-100/10 mr-2 w-32"
+            className="
+              [&:hover:not(:disabled)]:bg-opacity-90
+              [&:hover:not(:disabled)]:bg-secondary/20
+              [&:hover:not(:disabled)]:border-opacity-90
+              [&:not(button)]:text-center
+              border
+              border-secondary
+              cursor-pointer
+              disabled:cursor-not-allowed
+              disabled:opacity-70
+              duration-200
+              focus-visible:outline-none
+              focus:ring-4
+              focus:ring-opacity-20
+              focus:ring-primary
+              font-medium
+              inline-flex
+              items-center
+              justify-center
+              mr-2
+              px-5
+              py-2
+              rounded-md
+              shadow-sm
+              text-slate-500
+              transition
+              w-32"
           >
             Отменить
           </button>
