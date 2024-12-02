@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, MouseEvent, KeyboardEvent, useEffect, useState } from "react";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import { TPersonId } from "src/shared/ui/TextInputSearch/TextInputSearch";
 import styles from "../TextInputSearch/TextInputSearch.module.scss";
@@ -10,10 +10,54 @@ type TTextInputSelect = Omit<TTextInput, "onChange" | "value"> & {
   multiple?: boolean;
 };
 
-export const TextInputSelect = ({ data, value, multiple = false, ...props }: TTextInputSelect) => {
-  const [filteredData, setFilteredData] = useState<TPersonId[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+export const TextInputSelect = ({ data, value, multiple: multipleProp = false, ...props }: TTextInputSelect) => {
+  const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [selectedFromData, setSelectedFromData] = useState<TPersonId[]>([]);
+  const multiple = multipleProp && Array.isArray(value);
+  
+  const handleChangeInput  = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && multiple) {
+      event.preventDefault();
+
+      const findItem = data.find(item => item.fio === inputValue);
+      const outValue = findItem || { id: "", fio: inputValue };
+      props.onChange([...value, outValue]);
+      setInputValue("");
+    }
+  };
+
+  const handleItemDelete = (person: TPersonId) => {
+    const selectedValues = value as TPersonId[];
+    const index = selectedValues.findIndex(item => item.fio === person.fio);
+    if (index > -1) {
+      selectedValues.splice(index, 1);
+    }
+    props.onChange(selectedValues);
+  };
+
+  const handleItemClick = (event: MouseEvent, person: TPersonId) => {
+    event.preventDefault();
+    if (multiple) {
+      const selectedValues = Array.isArray(value) ? [...value] : [];
+      const index = selectedValues.findIndex(item => item.fio === person.fio);
+      if (index > -1) {
+        selectedValues.splice(index, 1);
+      } else {
+        selectedValues.push(person);
+      }
+      props.onChange(selectedValues);
+    } else {
+      setInputValue(person.fio);
+      if (props.onChange) {
+        props.onChange(person);
+      }
+    }
+  };
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -23,102 +67,89 @@ export const TextInputSelect = ({ data, value, multiple = false, ...props }: TTe
     setIsFocused(false);
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const eventValue = event.target.value;
-    let searchValue = eventValue;
-    
-    if(multiple) {
-      const eventItems = eventValue.split(", ");
-      searchValue = (eventItems.at(-1) || "").trim();
-
-      if(Array.isArray(value)) {
-        const hintValueFio = value.map((item) => item.fio);
-
-        function findUniqueValues(arr1: string[], arr2: string[]) {
-          const uniqueInArr1 = arr1.filter(value => !arr2.includes(value));
-          const uniqueInArr2 = arr2.filter(value => !arr1.includes(value));
-
-          return [...uniqueInArr1, ...uniqueInArr2];
-        }
-
-        const uniqueValues = findUniqueValues(hintValueFio, eventItems);
-      }
-    }
-
-    setSearchTerm(searchValue);
-    if (!multiple && props.onChange) {
-      const person = {
-        id: "",
-        fio: eventValue,
-      };
-      props.onChange(person);
-    }
-  };
-
   useEffect(() => {
-    const filtered = data.filter(item =>
-      item.fio.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setFilteredData(filtered);
-  }, [searchTerm, data]);
-
-  const handleItemClick = (event: MouseEvent, person: TPersonId) => {
-    event.preventDefault();
-    if (multiple) {
-      const selectedValues = Array.isArray(value) ? [...value] : [];
-      const index = selectedValues.findIndex(item => item.id === person.id);
-      if (index > -1) {
-        selectedValues.splice(index, 1);
-      } else {
-        selectedValues.push(person);
-      }
-      props.onChange(selectedValues);
-    } else {
-      setSearchTerm(person.fio);
-      if (props.onChange) {
-        props.onChange(person);
-      }
-    }
-  };
-
-  const displayValue = multiple
-    ? Array.isArray(value)
-      ? value.map(v => v.fio).join(", ")
-      : ""
-    : (value as TPersonId).fio;
+    const searchResults = data.filter(item => item.fio.toLowerCase().includes(inputValue.toLowerCase()));
+    setSelectedFromData(searchResults);
+  }, [inputValue, data]);
 
   return (
     <div className={styles.layout}>
       <TextInput
         {...props}
-        value={displayValue}
-        onChange={handleChange}
+        value={inputValue}
+        onChange={handleChangeInput}
         onFocus={handleFocus}
         onBlur={handleBlur}
-      />
-      {!!filteredData.length && searchTerm && isFocused && (
-        <div className={styles.dropdown}>
-          <div className="p-2 px-3 font-medium">
-            {filteredData.length} совпадений
+        onKeyDown={handleKeyDown}
+        classNameInputContainer={styles.layout}
+      >
+        {!!selectedFromData.length && isFocused && (
+          <div className={styles.dropdown}>
+            <div className="p-2 px-3 font-medium">
+              {selectedFromData.length} совпадений
+            </div>
+            <div className="h-px bg-slate-200/60 dark:bg-darkmode-400"/>
+            <div className={styles.scroll}>
+              {selectedFromData.map(person => {
+                const isSelected = multiple && Array.isArray(value) && value.some(v => v.id === person.id);
+                return (
+                  <div
+                    key={person.id}
+                    role="button"
+                    tabIndex={0}
+                    className={`${styles.item} ${isSelected ? styles.selected : ""}`}
+                    onMouseDown={(event) => handleItemClick(event, person)}
+                  >
+                    {person.fio}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="h-px bg-slate-200/60 dark:bg-darkmode-400" />
-          <div className={styles.scroll}>
-            {filteredData.map(person => {
-              const isSelected = multiple && Array.isArray(value) && value.some(v => v.id === person.id);
-              return (
-                <div
-                  key={person.id}
-                  role="button"
-                  tabIndex={0}
-                  className={`${styles.item} ${isSelected ? styles.selected : ""}`}
-                  onMouseDown={(event) => handleItemClick(event, person)}
-                >
-                  {person.fio}
-                </div>
-              );
-            })}
-          </div>
+        )}
+      </TextInput>
+
+      {multiple && !!value.length && (
+        <div className="flex mt-1.5 gap-1 flex-wrap">
+          {value.map(v => {
+            return (
+              <button
+                key={v.fio + v.id}
+                title={v.id ? `ID пользователя: ${v.id}` : "Пользователь еще не добавлен"}
+                onClick={() => handleItemDelete(v)}
+                className="
+                  transition
+                  [&:hover:not(:disabled)]:bg-opacity-90
+                  [&:hover:not(:disabled)]:bg-slate-100
+                  [&:hover:not(:disabled)]:border-opacity-90
+                  [&:hover:not(:disabled)]:border-slate-100
+                  [&:not(button)]:text-center
+                  border
+                  border-secondary/70
+                  cursor-pointer
+                  disabled:cursor-not-allowed
+                  disabled:opacity-70
+                  duration-200
+                  focus
+                  focus-visible:outline-none
+                  inline-flex
+                  items-center
+                  p-1
+                  pl-2
+                  rounded-md
+                  text-slate-500
+            ">
+                {v.fio}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  data-lucide="x" className="lucide lucide-x stroke-1.5 w-5 h-5 mx-auto block">
+                  <path d="M18 6 6 18"></path>
+                  <path d="m6 6 12 12"></path>
+                </svg>
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
