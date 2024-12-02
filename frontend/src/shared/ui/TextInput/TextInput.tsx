@@ -1,9 +1,11 @@
-import { ChangeEvent, ChangeEventHandler, InputHTMLAttributes, forwardRef, useId, useState, useEffect } from "react";
+import { ChangeEvent, ChangeEventHandler, InputHTMLAttributes, ReactNode, forwardRef, useId, useState, useEffect } from "react";
 
 export type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   placeholder?: string;
   className?: string;
+  classNameInputContainer?: string;
+  children?: ReactNode;
   onChange: ChangeEventHandler<HTMLInputElement>;
   value?: string;
   error?: any;
@@ -12,8 +14,10 @@ export type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
 export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({ 
   label, 
   placeholder = label, 
-  className, 
-  onChange, 
+  className,
+  classNameInputContainer, 
+  onChange,
+  children, 
   error, 
   value: propValue,
   ...props
@@ -43,15 +47,16 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
           {label}
         </label>
       )}
-      <input
-        {...props}
-        id={`textField${id}`}
-        type="text"
-        placeholder={placeholder}
-        ref={ref}
-        value={value}
-        onChange={handleChange}
-        className="
+      <div className={classNameInputContainer}>
+        <input
+          {...props}
+          id={`textField${id}`}
+          type="text"
+          placeholder={placeholder}
+          ref={ref}
+          value={value}
+          onChange={handleChange}
+          className="
           transition duration-200
           ease-in-out
           w-full
@@ -66,7 +71,9 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
           focus:border-primary
           focus:border-opacity-40
         "
-      />
+        />
+        {children}
+      </div>
       {error && (<div className="mt-2 text-danger">{error.message}</div>)}
     </div>
   );
