@@ -25,8 +25,8 @@ export const TextInputSelect = ({ data, value, multiple: multipleProp = false, .
       event.preventDefault();
 
       const findItem = data.find(item => item.fio === inputValue);
-      const isUnique  = value.some(item => item.fio !== inputValue);
-      if(isUnique ) {
+      const isUnique  = value.some(item => item.fio === inputValue);
+      if(!isUnique ) {
         const outValue = findItem || { id: "", fio: inputValue };
         props.onChange([...value, outValue]);
         setInputValue("");
