@@ -54,30 +54,32 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-      />
-      {!!filteredData.length && searchTerm && isFocused && (
-        <div className={styles.dropdown}>
-          <div className="p-2 px-3 font-medium">
-            {filteredData.length} совпадений
+        classNameInputContainer={styles.layout}
+      >
+        {!!filteredData.length && searchTerm && isFocused && (
+          <div className={styles.dropdown}>
+            <div className="p-2 px-3 font-medium">
+              {filteredData.length} совпадений
+            </div>
+            <div className="h-px bg-slate-200/60 dark:bg-darkmode-400" />
+            <div className={styles.scroll}>
+              {filteredData.map(person => {
+                return (
+                  <div
+                    key={person.id}
+                    role="button"
+                    tabIndex={0}
+                    className={styles.item}
+                    onMouseDown={(event) => handleItemClick(event, person)}
+                  >
+                    {person.fio}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="h-px bg-slate-200/60 dark:bg-darkmode-400" />
-          <div className={styles.scroll}>
-            {filteredData.map(person => {
-              return (
-                <div
-                  key={person.id}
-                  role="button"
-                  tabIndex={0}
-                  className={styles.item}
-                  onMouseDown={(event) => handleItemClick(event, person)}
-                >
-                  {person.fio}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+        )}
+      </TextInput>
     </div>
   );
 };
