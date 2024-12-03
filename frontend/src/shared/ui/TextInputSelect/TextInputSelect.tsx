@@ -17,10 +17,11 @@ export const TextInputSelect = ({ data, value, multiple: multipleProp = false, .
   const multiple = multipleProp && Array.isArray(value);
   
   const handleChangeInput  = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    const value = event.target.value.trim();
+    setInputValue(value);
 
     if(!multiple) {
-      props.onChange({ id: "", fio: event.target.value });
+      props.onChange({ id: "", fio: value });
     }
   };
 
@@ -31,7 +32,7 @@ export const TextInputSelect = ({ data, value, multiple: multipleProp = false, .
       if(multiple) {
         const findItem = data.find(item => item.fio === inputValue);
         const isUnique = value.some(item => item.fio === inputValue);
-        const outValue = findItem || {id: "", fio: inputValue.trim()};
+        const outValue = findItem || {id: "", fio: inputValue};
         if (!isUnique && outValue.fio) {
           props.onChange([...value, outValue]);
           setInputValue("");
