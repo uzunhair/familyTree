@@ -18,18 +18,24 @@ export const TextInputSelect = ({ data, value, multiple: multipleProp = false, .
   
   const handleChangeInput  = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
+
+    if(!multiple) {
+      props.onChange({ id: "", fio: event.target.value });
+    }
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && multiple) {
+    if (event.key === "Enter") {
       event.preventDefault();
 
-      const findItem = data.find(item => item.fio === inputValue);
-      const isUnique  = value.some(item => item.fio === inputValue);
-      if(!isUnique ) {
-        const outValue = findItem || { id: "", fio: inputValue };
-        props.onChange([...value, outValue]);
-        setInputValue("");
+      if(multiple) {
+        const findItem = data.find(item => item.fio === inputValue);
+        const isUnique = value.some(item => item.fio === inputValue);
+        const outValue = findItem || {id: "", fio: inputValue.trim()};
+        if (!isUnique && outValue.fio) {
+          props.onChange([...value, outValue]);
+          setInputValue("");
+        }
       }
     }
   };
@@ -56,9 +62,7 @@ export const TextInputSelect = ({ data, value, multiple: multipleProp = false, .
       props.onChange(selectedValues);
     } else {
       setInputValue(person.fio);
-      if (props.onChange) {
-        props.onChange(person);
-      }
+      props.onChange(person);
     }
   };
 
@@ -84,7 +88,27 @@ export const TextInputSelect = ({ data, value, multiple: multipleProp = false, .
         onFocus={handleFocus}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        classNameInputContainer={styles.layout}
+        icon={
+          <>
+            {multiple ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="users"
+                className="lucide lucide-users stroke-1.5 w-5 h-5 mx-auto block">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            ): (
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                data-lucide="user" className="lucide lucide-user stroke-1.5 w-5 h-5 mx-auto block">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            )}
+          </>
+        }
       >
         {!!selectedFromData.length && isFocused && (
           <div className={styles.dropdown}>

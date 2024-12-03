@@ -1,11 +1,12 @@
 import { ChangeEvent, ChangeEventHandler, InputHTMLAttributes, ReactNode, forwardRef, useId, useState, useEffect } from "react";
+import styles from "./TextInput.module.scss";
 
 export type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   placeholder?: string;
   className?: string;
-  classNameInputContainer?: string;
   children?: ReactNode;
+  icon?: ReactNode;
   onChange: ChangeEventHandler<HTMLInputElement>;
   value?: string;
   error?: any;
@@ -15,9 +16,9 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
   label, 
   placeholder = label, 
   className,
-  classNameInputContainer, 
   onChange,
-  children, 
+  children,
+  icon, 
   error, 
   value: propValue,
   ...props
@@ -47,7 +48,7 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
           {label}
         </label>
       )}
-      <div className={classNameInputContainer}>
+      <div className={styles.input}>
         <input
           {...props}
           id={`textField${id}`}
@@ -72,6 +73,11 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
           focus:border-opacity-40
         "
         />
+        {icon && (
+          <div className={styles.icon}>
+            {icon}
+          </div>
+        )}
         {children}
       </div>
       {error && (<div className="mt-2 text-danger">{error.message}</div>)}

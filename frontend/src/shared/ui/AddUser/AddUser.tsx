@@ -33,7 +33,7 @@ type TInputsOut = {
   familiar: string[];
 }
 
-const defaultValues = {
+const defaultValues: TInputs = {
   id: "",
   fio: "",
   birthday: "",
@@ -49,7 +49,6 @@ const defaultValues = {
   friends: [],
   colleagues: [],
   familiar: [],
-  createPerson: [],
 };
 
 export const AddUser = () => {
@@ -65,7 +64,7 @@ export const AddUser = () => {
   });
 
   const [apiPersons, setApiPersons] = useState<TPersonId[]>([]);
-  
+
   const onSubmit: SubmitHandler<TInputs> = (data) =>  {
     const isDuplicate = apiPersons.some(
       item => item.fio.toLowerCase().trim() === data.fio.toLowerCase().trim()

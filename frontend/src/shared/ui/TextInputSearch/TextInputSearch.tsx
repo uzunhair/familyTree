@@ -54,7 +54,6 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        classNameInputContainer={styles.layout}
       >
         {!!filteredData.length && searchTerm && isFocused && (
           <div className={styles.dropdown}>
