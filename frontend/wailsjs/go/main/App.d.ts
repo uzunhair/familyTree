@@ -10,4 +10,4 @@ export function LoadFromJSON():Promise<Array<main.Person>>;
 
 export function SaveToJSON(arg1:string,arg2:Array<main.Person>):Promise<void>;
 
-export function SaveUserToJSONFile(arg1:main.Person):Promise<main.Person>;
+export function SaveUsersToJSONFile(arg1:Array<main.Person>):Promise<Array<main.Person>>;

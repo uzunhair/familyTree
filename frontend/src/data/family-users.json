@@ -1,25 +1,25 @@
 [
   {
-    "id": "id",
-    "fio": "fio",
+    "id": "001_test",
+    "fio": "Test Person Object",
     "birthday": "birthday",
     "father": "father",
     "mother": "mother",
     "wife": [
-      "wife",
-      "wife2"
+      "Жена Номер Один",
+      "Жена Номер Два"
     ],
     "friends": [
-      "friends1",
-      "riends2"
+      "Друг Номер Один",
+      "Друг Номер Два"
     ],
     "colleagues": [
-      "colleagues1",
-      "olleagues2"
+      "Коллега Номер Один",
+      "Коллега Номер Два"
     ],
     "familiar": [
-      "familiar1",
-      "amiliar2"
+      "Знакомый Номер Один",
+      "Знакомый Номер Два"
     ]
   }
 ]

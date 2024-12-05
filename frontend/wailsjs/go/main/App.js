@@ -18,6 +18,6 @@ export function SaveToJSON(arg1, arg2) {
   return window['go']['main']['App']['SaveToJSON'](arg1, arg2);
 }
 
-export function SaveUserToJSONFile(arg1) {
-  return window['go']['main']['App']['SaveUserToJSONFile'](arg1);
+export function SaveUsersToJSONFile(arg1) {
+  return window['go']['main']['App']['SaveUsersToJSONFile'](arg1);
 }

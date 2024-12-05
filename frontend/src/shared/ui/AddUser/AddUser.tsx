@@ -6,7 +6,7 @@ import {TextInputSearch} from "src/shared/ui/TextInputSearch";
 import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
 import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {addUserSchema} from "./lib/schema/addUser";
-import {SaveUserToJSONFile, GetAllPerson} from "../../../../wailsjs/go/main/App";
+import {SaveUsersToJSONFile, GetAllPerson} from "../../../../wailsjs/go/main/App";
 import {TextInput} from "../TextInput";
 
 type TInputs = {
@@ -129,7 +129,7 @@ export const AddUser = () => {
     console.log("addNewPersons", addNewPersons);
     console.log("_newPersons", newPersons);
 
-    SaveUserToJSONFile(addNewPersons[1] as TInputsOut)
+    SaveUsersToJSONFile(addNewPersons as TInputsOut[])
     // eslint-disable-next-line no-console
       .then((item) => console.log("Add new person", item))
     // eslint-disable-next-line no-console
