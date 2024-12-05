@@ -21,6 +21,18 @@ type TInputs = {
   familiar: TPersonId[];
 }
 
+type TInputsOut = {
+  id: string;
+  fio: string;
+  birthday: string;
+  father: string;
+  mother: string;
+  wife: string[];
+  friends: string[];
+  colleagues: string[];
+  familiar: string[];
+}
+
 type TInputsKeys = keyof TInputs;
 
 const defaultValues: TInputs = {
@@ -101,22 +113,27 @@ export const AddUser = () => {
     }, {} as Record<TInputsKeys, string | string[]>);
 
     const addNewPersons = [
+      {
+        ...personAddConst,
+        id: mainPersonId,
+      },
       ...newPersons,
-      // {
-      //   ...personAddConst,
-      //   id: mainPersonId,
-      // },
     ];
+    
+    const user = {
+      ...personAddConst,
+      id: mainPersonId,
+    };
 
     console.log("data", data);
-    console.log("_mainPerson", mainPerson);
+    console.log("addNewPersons", addNewPersons);
     console.log("_newPersons", newPersons);
 
-    // SaveUserToJSONFile(mainPerson)
-    // // eslint-disable-next-line no-console
-    //   .then((item) => console.log("Add new person", item))
-    // // eslint-disable-next-line no-console
-    //   .catch((errors) => console.log("Errors: Add new person", errors));
+    SaveUserToJSONFile(addNewPersons[1] as TInputsOut)
+    // eslint-disable-next-line no-console
+      .then((item) => console.log("Add new person", item))
+    // eslint-disable-next-line no-console
+      .catch((errors) => console.log("Errors: Add new person", errors));
   };
   
   useEffect(() => {
