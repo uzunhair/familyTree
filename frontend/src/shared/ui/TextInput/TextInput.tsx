@@ -57,6 +57,7 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
           ref={ref}
           value={value}
           onChange={handleChange}
+          autoComplete="off"
           className="
           transition duration-200
           ease-in-out
