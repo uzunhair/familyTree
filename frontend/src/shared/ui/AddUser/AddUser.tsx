@@ -13,25 +13,15 @@ type TInputs = {
   id: string;
   fio: string;
   birthday: string;
-  wife: TPersonId[];
   father: TPersonId;
   mother: TPersonId;
+  wife: TPersonId[];
   friends: TPersonId[];
   colleagues: TPersonId[];
   familiar: TPersonId[];
 }
 
-type TInputsOut = {
-  id: string;
-  fio: string;
-  birthday: string;
-  wife: string[];
-  father: string;
-  mother: string;
-  friends: string[];
-  colleagues: string[];
-  familiar: string[];
-}
+type TInputsKeys = keyof TInputs;
 
 const defaultValues: TInputs = {
   id: "",
@@ -56,8 +46,6 @@ export const AddUser = () => {
     handleSubmit,
     control,
     setError,
-    setValue,
-    watch,
   } = useForm<TInputs>({
     defaultValues,
     resolver: yupResolver(addUserSchema),
@@ -78,6 +66,7 @@ export const AddUser = () => {
       return;
     }
 
+    const mainPersonId = setPersonId(data.fio);
     const newPersons: TPersonId[] = [];
 
     const personObject = (value: TPersonId) => {
@@ -95,21 +84,29 @@ export const AddUser = () => {
 
       return { id: "" };
     };
-    
-    const personArray = (value: TPersonId[]) => {
-      return value.map((item) => personObject(item).id);
-    };
 
-    const mainPerson: TInputsOut = {
-      ...data,
-      id: setPersonId(data.fio),
-      wife: personArray(data.wife),
-      father: personObject(data.father).id,
-      mother: personObject(data.mother).id,
-      friends: personArray(data.friends),
-      colleagues: personArray(data.colleagues),
-      familiar: personArray(data.familiar),
-    };
+    const personAddConst = Object.keys(data).reduce((acc, key) => {
+      const typedKey = key as TInputsKeys;
+      const value = data[typedKey];
+
+      if (typeof value === "string" && value) {
+        acc[typedKey] = value;
+      } else if (Array.isArray(value)) {
+        acc[typedKey] = value.map(item => personObject(item).id);
+      } else if (typeof value === "object" && value !== null) {
+        acc[typedKey] = personObject(value).id;
+      }
+
+      return acc;
+    }, {} as Record<TInputsKeys, string | string[]>);
+
+    const addNewPersons = [
+      ...newPersons,
+      // {
+      //   ...personAddConst,
+      //   id: mainPersonId,
+      // },
+    ];
 
     console.log("data", data);
     console.log("_mainPerson", mainPerson);
