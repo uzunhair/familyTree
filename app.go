@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 // App struct
@@ -142,3 +143,60 @@ func (a *App) GetAllPerson() ([]PersonId, error) {
 
 	return persons, nil
 }
+
+type SearchResult struct {
+	Persons []Person `json:"persons"`
+	Count   int      `json:"count"`
+}
+
+func (a *App) GetPersonList(search string) (SearchResult, error) {
+	people, err := a.LoadFromJSON()
+	if err != nil {
+		return SearchResult{}, fmt.Errorf("failed to load persons: %w", err)
+	}
+
+	var persons []Person
+	search = strings.ToLower(search)
+	for _, person := range people {
+		if strings.Contains(strings.ToLower(person.Fio), search) ||
+			strings.Contains(strings.ToLower(person.ID), search) ||
+			strings.Contains(strings.ToLower(person.Birthday), search) {
+			persons = append(persons, Person{
+				ID:         person.ID,
+				Fio:        person.Fio,
+				Birthday:   person.Birthday,
+				Wife:       person.Wife,
+				Father:     person.Father,
+				Mother:     person.Mother,
+				Friends:    person.Friends,
+				Colleagues: person.Colleagues,
+				Familiar:   person.Familiar,
+			})
+		}
+	}
+
+	if len(persons) == 0 {
+		return SearchResult{
+			Persons: []Person{},
+			Count:   0,
+		}, nil
+	}
+
+	return SearchResult{
+		Persons: persons,
+		Count:   len(persons),
+	}, nil
+}
+
+//func main() {
+//	app := NewApp()
+//	search := "иван"
+//	people, err := app.GetPersonList(search)
+//	if err != nil {
+//		log.Fatalf("failed to get person list: %s", err)
+//	}
+//
+//	for _, person := range people {
+//		fmt.Printf("Found person: %s\n", person.Fio)
+//	}
+//}

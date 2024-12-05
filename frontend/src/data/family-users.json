@@ -21,5 +21,84 @@
       "Знакомый Номер Один",
       "Знакомый Номер Два"
     ]
+  },
+  {
+    "id": "1733376384970_yuzh",
+    "fio": "Зайнулабидов Узунхайир Ражабдибирович",
+    "birthday": "27.07.1991",
+    "father": "1733376384970_yzhs",
+    "mother": "1733376384970_rkr",
+    "wife": [
+      "1733376384970_yir"
+    ],
+    "friends": [],
+    "colleagues": [],
+    "familiar": []
+  },
+  {
+    "id": "1733376384970_yir",
+    "fio": "Зайнулабидова Наида Мурадовна",
+    "birthday": "",
+    "father": "",
+    "mother": "",
+    "wife": null,
+    "friends": null,
+    "colleagues": null,
+    "familiar": null
+  },
+  {
+    "id": "1733376384970_yzhs",
+    "fio": "Зайнулабидов Ражабдибир Расулулаевич",
+    "birthday": "",
+    "father": "",
+    "mother": "",
+    "wife": null,
+    "friends": null,
+    "colleagues": null,
+    "familiar": null
+  },
+  {
+    "id": "1733376384970_rkr",
+    "fio": "Курбанова Чакар Курбановна",
+    "birthday": "",
+    "father": "",
+    "mother": "",
+    "wife": null,
+    "friends": null,
+    "colleagues": null,
+    "familiar": null
+  },
+  {
+    "id": "1733376803894_ygzh",
+    "fio": "Зайнулабидов Магомед Ражабдибирович",
+    "birthday": "24.12.1994",
+    "father": "1733376384970_yzhs",
+    "mother": "1733376384970_rkr",
+    "wife": [],
+    "friends": [],
+    "colleagues": [],
+    "familiar": []
+  },
+  {
+    "id": "1733376979811_yru",
+    "fio": "Зайнулабидова Каримат Узунхайировна",
+    "birthday": "24.12.1994",
+    "father": "1733376384970_yuzh",
+    "mother": "1733376384970_yir",
+    "wife": [],
+    "friends": [],
+    "colleagues": [],
+    "familiar": []
+  },
+  {
+    "id": "1733377018523_yszh",
+    "fio": "Зайнулабидов Расулула Ражабдибирович",
+    "birthday": "24.12.1994",
+    "father": "1733376384970_yzhs",
+    "mother": "1733376384970_rkr",
+    "wife": [],
+    "friends": [],
+    "colleagues": [],
+    "familiar": []
   }
 ]
