@@ -84,7 +84,7 @@ func (a *App) LoadFromJSON() ([]Person, error) {
 	return people, nil
 }
 
-func (a *App) SaveUserToJSONFile(family *Person) Person {
+func (a *App) SaveUsersToJSONFile(families []Person) []Person {
 	// Создаем экземпляр приложения
 	app := NewApp()
 	filename := personsFilePath
@@ -95,19 +95,21 @@ func (a *App) SaveUserToJSONFile(family *Person) Person {
 		log.Fatalf("failed to load data: %s", err)
 	}
 
-	// Add a new person to the slice
-	newPerson := Person{
-		ID:         family.ID,
-		Fio:        family.Fio,
-		Birthday:   family.Birthday,
-		Wife:       family.Wife,
-		Father:     family.Father,
-		Mother:     family.Mother,
-		Friends:    family.Friends,
-		Colleagues: family.Colleagues,
-		Familiar:   family.Familiar,
+	// Add new persons to the slice
+	for _, family := range families {
+		newPerson := Person{
+			ID:         family.ID,
+			Fio:        family.Fio,
+			Birthday:   family.Birthday,
+			Wife:       family.Wife,
+			Father:     family.Father,
+			Mother:     family.Mother,
+			Friends:    family.Friends,
+			Colleagues: family.Colleagues,
+			Familiar:   family.Familiar,
+		}
+		people = append(people, newPerson)
 	}
-	people = append(people, newPerson)
 
 	// Save the updated data back to the file
 	err = app.SaveToJSON(filename, people)
@@ -115,8 +117,8 @@ func (a *App) SaveUserToJSONFile(family *Person) Person {
 		log.Fatalf("failed to save data: %s", err)
 	}
 
-	fmt.Println("New person added successfully")
-	return newPerson
+	fmt.Println("Добавлены новые пользователи")
+	return families
 }
 
 type PersonId struct {
