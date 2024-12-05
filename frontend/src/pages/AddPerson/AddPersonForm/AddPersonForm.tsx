@@ -2,12 +2,12 @@ import {useEffect, useState} from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {setPersonId} from "src/shared/lib/helpers/setPersonId";
+import {TextInput} from "src/shared/ui/TextInput";
 import {TextInputSearch} from "src/shared/ui/TextInputSearch";
 import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
 import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {addUserSchema} from "./lib/schema/addUser";
 import {SaveUsersToJSONFile, GetAllPerson} from "../../../../wailsjs/go/main/App";
-import {TextInput} from "../TextInput";
 
 type TInputs = {
   id: string;
@@ -53,7 +53,7 @@ const defaultValues: TInputs = {
   familiar: [],
 };
 
-export const AddUser = () => {
+export const AddPersonForm = () => {
   const {
     handleSubmit,
     control,
@@ -119,15 +119,6 @@ export const AddUser = () => {
       },
       ...newPersons,
     ];
-    
-    const user = {
-      ...personAddConst,
-      id: mainPersonId,
-    };
-
-    console.log("data", data);
-    console.log("addNewPersons", addNewPersons);
-    console.log("_newPersons", newPersons);
 
     SaveUsersToJSONFile(addNewPersons as TInputsOut[])
     // eslint-disable-next-line no-console
