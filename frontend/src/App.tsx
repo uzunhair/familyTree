@@ -108,7 +108,7 @@ function App() {
                                 <line x1={10} x2={8} y1={9} y2={9}/>
                               </svg>
                             </div>
-                            <div className="menu__title">Post</div>
+                            <div className="menu__title">Главная</div>
                           </a>
                         </li>
                         <li className="menu__divider my-6"/>
@@ -133,7 +133,7 @@ function App() {
                               </svg>
                             </div>
                             <div className="menu__title">
-                                Crud
+                                Добавить человека
                               <div className="menu__sub-icon transform rotate-180">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +176,7 @@ function App() {
                                     <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                                   </svg>
                                 </div>
-                                <div className="menu__title">Data List</div>
+                                <div className="menu__title">Списко людей</div>
                               </a>
                             </li>
                             <li>
@@ -201,7 +201,7 @@ function App() {
                                     <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                                   </svg>
                                 </div>
-                                <div className="menu__title">Form</div>
+                                <div className="menu__title">Биометрия</div>
                               </a>
                             </li>
                           </ul>
@@ -599,7 +599,7 @@ function App() {
                         <line x1={10} x2={8} y1={9} y2={9}/>
                       </svg>
                     </div>
-                    <div className="side-menu__title">Post</div>
+                    <div className="side-menu__title">Главная</div>
                   </a>
                 </li>
                 <li className="side-nav__divider my-6"/>
@@ -624,7 +624,7 @@ function App() {
                       </svg>
                     </div>
                     <div className="side-menu__title">
-                        Crud
+                        Добавить
                       <div className="side-menu__sub-icon transform rotate-180">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -667,7 +667,7 @@ function App() {
                             <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                           </svg>
                         </div>
-                        <div className="side-menu__title">Data List</div>
+                        <div className="side-menu__title">Список</div>
                       </a>
                     </li>
                     <li>
@@ -692,7 +692,7 @@ function App() {
                             <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                           </svg>
                         </div>
-                        <div className="side-menu__title">Form</div>
+                        <div className="side-menu__title">Связи</div>
                       </a>
                     </li>
                   </ul>
