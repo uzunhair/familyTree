@@ -4,12 +4,12 @@ export namespace main {
 	    id: string;
 	    fio: string;
 	    birthday: string;
-	    wife: string;
 	    father: string;
 	    mother: string;
-	    friends: string;
-	    colleagues: string;
-	    familiar: string;
+	    wife: string[];
+	    friends: string[];
+	    colleagues: string[];
+	    familiar: string[];
 	
 	    static createFrom(source: any = {}) {
 	        return new Person(source);
@@ -20,9 +20,9 @@ export namespace main {
 	        this.id = source["id"];
 	        this.fio = source["fio"];
 	        this.birthday = source["birthday"];
-	        this.wife = source["wife"];
 	        this.father = source["father"];
 	        this.mother = source["mother"];
+	        this.wife = source["wife"];
 	        this.friends = source["friends"];
 	        this.colleagues = source["colleagues"];
 	        this.familiar = source["familiar"];

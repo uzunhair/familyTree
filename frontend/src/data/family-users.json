@@ -1,24 +1,25 @@
 [
   {
-    "id": "eggdsv",
-    "fio": "Зайнулабидов Узмвымунхайир",
-    "birthday": "",
-    "wife": "",
-    "father": "",
-    "mother": "",
-    "friends": "",
-    "colleagues": "",
-    "familiar": ""
-  },
-  {
-    "id": "1732933386006_ZN",
-    "fio": "Зайнулабидова Наида",
-    "birthday": "",
-    "wife": "",
-    "father": "",
-    "mother": "",
-    "friends": "",
-    "colleagues": "",
-    "familiar": ""
+    "id": "id",
+    "fio": "fio",
+    "birthday": "birthday",
+    "father": "father",
+    "mother": "mother",
+    "wife": [
+      "wife",
+      "wife2"
+    ],
+    "friends": [
+      "friends1",
+      "riends2"
+    ],
+    "colleagues": [
+      "colleagues1",
+      "olleagues2"
+    ],
+    "familiar": [
+      "familiar1",
+      "amiliar2"
+    ]
   }
 ]

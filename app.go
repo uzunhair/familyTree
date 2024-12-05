@@ -15,15 +15,15 @@ type App struct {
 
 // Person представляет человека в семейном древе
 type Person struct {
-	ID         string `json:"id"`
-	Fio        string `json:"fio"`
-	Birthday   string `json:"birthday"`
-	Wife       string `json:"wife"`
-	Father     string `json:"father"`
-	Mother     string `json:"mother"`
-	Friends    string `json:"friends"`
-	Colleagues string `json:"colleagues"`
-	Familiar   string `json:"familiar"`
+	ID         string   `json:"id"`
+	Fio        string   `json:"fio"`
+	Birthday   string   `json:"birthday"`
+	Father     string   `json:"father"`
+	Mother     string   `json:"mother"`
+	Wife       []string `json:"wife"`
+	Friends    []string `json:"friends"`
+	Colleagues []string `json:"colleagues"`
+	Familiar   []string `json:"familiar"`
 }
 
 var personsFilePath = "frontend/src/data/family-users.json"
