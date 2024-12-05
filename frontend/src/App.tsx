@@ -1,8 +1,6 @@
 import "./App.css";
 import {useState} from "react";
-
 import {Breadcrumb} from "src/shared/ui/Breadcrumb";
-
 import {AddUser} from "./shared/ui/AddUser";
 import {Greet} from "../wailsjs/go/main/App";
 
