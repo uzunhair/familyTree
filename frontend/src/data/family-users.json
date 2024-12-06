@@ -6,12 +6,12 @@
     "father": "1733376384970_yzhs",
     "mother": "1733376384970_rkr",
     "wife": [
-      "1733376384970_yir",
-      "1733377018523_yszh"
+      "1733376384970_yir"
     ],
     "friends": null,
     "colleagues": null,
-    "familiar": null
+    "familiar": null,
+    "comments": "Нужно добавить еще такие то данные"
   },
   {
     "id": "1733376384970_yir",
@@ -22,7 +22,8 @@
     "wife": null,
     "friends": null,
     "colleagues": null,
-    "familiar": null
+    "familiar": null,
+    "comments": ""
   },
   {
     "id": "1733376384970_yzhs",
@@ -35,7 +36,8 @@
     ],
     "friends": null,
     "colleagues": null,
-    "familiar": null
+    "familiar": null,
+    "comments": ""
   },
   {
     "id": "1733376384970_rkr",
@@ -46,7 +48,8 @@
     "wife": null,
     "friends": null,
     "colleagues": null,
-    "familiar": null
+    "familiar": null,
+    "comments": ""
   },
   {
     "id": "1733376803894_ygzh",
@@ -57,7 +60,8 @@
     "wife": [],
     "friends": [],
     "colleagues": [],
-    "familiar": []
+    "familiar": [],
+    "comments": ""
   },
   {
     "id": "1733376979811_yru",
@@ -68,7 +72,8 @@
     "wife": null,
     "friends": null,
     "colleagues": null,
-    "familiar": null
+    "familiar": null,
+    "comments": ""
   },
   {
     "id": "1733377018523_yszh",
@@ -79,7 +84,8 @@
     "wife": [],
     "friends": [],
     "colleagues": [],
-    "familiar": []
+    "familiar": [],
+    "comments": ""
   },
   {
     "id": "1733466560436_ymg",
@@ -90,6 +96,7 @@
     "wife": [],
     "friends": [],
     "colleagues": [],
-    "familiar": []
+    "familiar": [],
+    "comments": ""
   }
 ]

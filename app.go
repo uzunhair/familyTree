@@ -25,6 +25,7 @@ type Person struct {
 	Friends    []string `json:"friends"`
 	Colleagues []string `json:"colleagues"`
 	Familiar   []string `json:"familiar"`
+	Comments   string   `json:"comments"`
 }
 
 var personsFilePath = "frontend/src/data/family-users.json"
@@ -214,6 +215,7 @@ type PersonWithDetails struct {
 	Friends    []PersonId `json:"friends"`
 	Colleagues []PersonId `json:"colleagues"`
 	Familiar   []PersonId `json:"familiar"`
+	Comments   string     `json:"comments"`
 }
 
 func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
@@ -306,6 +308,7 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		Friends:    friendObjects,
 		Colleagues: colleagueObjects,
 		Familiar:   familiarObjects,
+		Comments:   person.Comments,
 	}
 
 	return personWithDetails, nil

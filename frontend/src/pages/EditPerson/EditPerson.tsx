@@ -8,6 +8,7 @@ import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
 import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {LayoutMain} from "src/widgets/template/LayoutMain";
 import {GetAllPerson, GetPersonByID, UpdatePersonByID} from "../../../wailsjs/go/main/App";
+import {Textarea} from "src/shared/ui/Textarea";
 
 type TInputs = {
   id: string;
@@ -19,6 +20,7 @@ type TInputs = {
   friends: TPersonId[];
   colleagues: TPersonId[];
   familiar: TPersonId[];
+  comments: string;
 }
 
 type TInputsOut = {
@@ -31,6 +33,7 @@ type TInputsOut = {
   friends: string[];
   colleagues: string[];
   familiar: string[];
+  comments: string;
 }
 
 type TInputsKeys = keyof TInputs;
@@ -44,7 +47,6 @@ function EditPerson() {
   } = useForm<TInputs>({
     defaultValues: async () =>  GetPersonByID(id)
       .then((item) => {
-        console.log("_item--", item);
         return(item);
       }),
   });
@@ -224,6 +226,20 @@ function EditPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
+                />
+              )}
+            />
+            <Controller
+              name="comments"
+              control={control}
+              render={({field: {value, onChange,}, fieldState: {error}}) => (
+                <Textarea
+                  label="Комментарий"
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                  rows={5}
+                  className="mt-4"
                 />
               )}
             />

@@ -72,8 +72,7 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
           focus:ring-opacity-20
           focus:border-primary
           focus:border-opacity-40
-        "
-        />
+        "/>
         {icon && (
           <div className={styles.icon}>
             {icon}

@@ -10,6 +10,7 @@ export namespace main {
 	    friends: string[];
 	    colleagues: string[];
 	    familiar: string[];
+	    comments: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Person(source);
@@ -26,6 +27,7 @@ export namespace main {
 	        this.friends = source["friends"];
 	        this.colleagues = source["colleagues"];
 	        this.familiar = source["familiar"];
+	        this.comments = source["comments"];
 	    }
 	}
 	export class PersonId {
@@ -52,6 +54,7 @@ export namespace main {
 	    friends: PersonId[];
 	    colleagues: PersonId[];
 	    familiar: PersonId[];
+	    comments: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new PersonWithDetails(source);
@@ -68,6 +71,7 @@ export namespace main {
 	        this.friends = this.convertValues(source["friends"], PersonId);
 	        this.colleagues = this.convertValues(source["colleagues"], PersonId);
 	        this.familiar = this.convertValues(source["familiar"], PersonId);
+	        this.comments = source["comments"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

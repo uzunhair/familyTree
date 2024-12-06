@@ -19,6 +19,7 @@ type TInputs = {
   friends: TPersonId[];
   colleagues: TPersonId[];
   familiar: TPersonId[];
+  comments: string;
 }
 
 type TInputsOut = {
@@ -31,6 +32,7 @@ type TInputsOut = {
   friends: string[];
   colleagues: string[];
   familiar: string[];
+  comments: string;
 }
 
 type TInputsKeys = keyof TInputs;
@@ -51,6 +53,7 @@ const defaultValues: TInputs = {
   friends: [],
   colleagues: [],
   familiar: [],
+  comments: ""
 };
 
 export const AddPersonForm = () => {
