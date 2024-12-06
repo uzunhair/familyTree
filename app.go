@@ -234,51 +234,65 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		return PersonWithDetails{}, fmt.Errorf("person with ID %s not found", id)
 	}
 
-	// Загрузить дополнительные данные
+	// Инициализация массивов как пустых, если они null
 	var wifeObjects []PersonId
-	for _, wifeId := range person.Wife {
-		wife, err := a.GetPersonByIdAndFio(wifeId)
-		if err != nil {
-			return PersonWithDetails{}, fmt.Errorf("failed to load wife data: %w", err)
+	if person.Wife != nil {
+		for _, wifeId := range person.Wife {
+			wife, err := a.GetPersonByIdAndFio(wifeId)
+			if err != nil {
+				return PersonWithDetails{}, fmt.Errorf("failed to load wife data: %w", err)
+			}
+			wifeObjects = append(wifeObjects, wife)
 		}
-		wifeObjects = append(wifeObjects, wife)
 	}
 
 	var friendObjects []PersonId
-	for _, friendId := range person.Friends {
-		friend, err := a.GetPersonByIdAndFio(friendId)
-		if err != nil {
-			return PersonWithDetails{}, fmt.Errorf("failed to load friend data: %w", err)
+	if person.Friends != nil {
+		for _, friendId := range person.Friends {
+			friend, err := a.GetPersonByIdAndFio(friendId)
+			if err != nil {
+				return PersonWithDetails{}, fmt.Errorf("failed to load friend data: %w", err)
+			}
+			friendObjects = append(friendObjects, friend)
 		}
-		friendObjects = append(friendObjects, friend)
 	}
 
 	var colleagueObjects []PersonId
-	for _, colleagueId := range person.Colleagues {
-		colleague, err := a.GetPersonByIdAndFio(colleagueId)
-		if err != nil {
-			return PersonWithDetails{}, fmt.Errorf("failed to load colleague data: %w", err)
+	if person.Colleagues != nil {
+		for _, colleagueId := range person.Colleagues {
+			colleague, err := a.GetPersonByIdAndFio(colleagueId)
+			if err != nil {
+				return PersonWithDetails{}, fmt.Errorf("failed to load colleague data: %w", err)
+			}
+			colleagueObjects = append(colleagueObjects, colleague)
 		}
-		colleagueObjects = append(colleagueObjects, colleague)
 	}
 
 	var familiarObjects []PersonId
-	for _, familiarId := range person.Familiar {
-		familiar, err := a.GetPersonByIdAndFio(familiarId)
-		if err != nil {
-			return PersonWithDetails{}, fmt.Errorf("failed to load familiar data: %w", err)
+	if person.Familiar != nil {
+		for _, familiarId := range person.Familiar {
+			familiar, err := a.GetPersonByIdAndFio(familiarId)
+			if err != nil {
+				return PersonWithDetails{}, fmt.Errorf("failed to load familiar data: %w", err)
+			}
+			familiarObjects = append(familiarObjects, familiar)
 		}
-		familiarObjects = append(familiarObjects, familiar)
 	}
 
-	father, err := a.GetPersonByIdAndFio(person.Father)
-	if err != nil {
-		return PersonWithDetails{}, fmt.Errorf("failed to load father data: %w", err)
+	var father PersonId
+	if person.Father != "" {
+		father, err = a.GetPersonByIdAndFio(person.Father)
+		if err != nil {
+			return PersonWithDetails{}, fmt.Errorf("failed to load father data: %w", err)
+		}
 	}
 
-	mother, err := a.GetPersonByIdAndFio(person.Mother)
-	if err != nil {
-		return PersonWithDetails{}, fmt.Errorf("failed to load mother data: %w", err)
+	var mother PersonId
+	if person.Mother != "" {
+		mother, err = a.GetPersonByIdAndFio(person.Mother)
+		if err != nil {
+			return PersonWithDetails{}, fmt.Errorf("failed to load mother data: %w", err)
+		}
 	}
 
 	// Заполнить поля пользователя

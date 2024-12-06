@@ -1,28 +1,5 @@
 [
   {
-    "id": "001_test",
-    "fio": "Test Person Object",
-    "birthday": "birthday",
-    "father": "father",
-    "mother": "mother",
-    "wife": [
-      "Жена Номер Один",
-      "Жена Номер Два"
-    ],
-    "friends": [
-      "Друг Номер Один",
-      "Друг Номер Два"
-    ],
-    "colleagues": [
-      "Коллега Номер Один",
-      "Коллега Номер Два"
-    ],
-    "familiar": [
-      "Знакомый Номер Один",
-      "Знакомый Номер Два"
-    ]
-  },
-  {
     "id": "1733376384970_yuzh",
     "fio": "Зайнулабидов Узунхайир Ражабдибирович",
     "birthday": "27.07.1991",
@@ -39,7 +16,7 @@
   {
     "id": "1733376384970_yir",
     "fio": "Зайнулабидова Наида Мурадовна",
-    "birthday": "",
+    "birthday": "23.03.1994",
     "father": "",
     "mother": "",
     "wife": null,
@@ -50,10 +27,12 @@
   {
     "id": "1733376384970_yzhs",
     "fio": "Зайнулабидов Ражабдибир Расулулаевич",
-    "birthday": "",
+    "birthday": "15.09.1969",
     "father": "",
     "mother": "",
-    "wife": null,
+    "wife": [
+      "1733376384970_rkr"
+    ],
     "friends": null,
     "colleagues": null,
     "familiar": null
@@ -83,13 +62,13 @@
   {
     "id": "1733376979811_yru",
     "fio": "Зайнулабидова Каримат Узунхайировна",
-    "birthday": "24.12.1994",
+    "birthday": "17.11.2017",
     "father": "1733376384970_yuzh",
     "mother": "1733376384970_yir",
-    "wife": [],
-    "friends": [],
-    "colleagues": [],
-    "familiar": []
+    "wife": null,
+    "friends": null,
+    "colleagues": null,
+    "familiar": null
   },
   {
     "id": "1733377018523_yszh",
@@ -97,6 +76,17 @@
     "birthday": "24.12.1994",
     "father": "1733376384970_yzhs",
     "mother": "1733376384970_rkr",
+    "wife": [],
+    "friends": [],
+    "colleagues": [],
+    "familiar": []
+  },
+  {
+    "id": "1733466560436_ymg",
+    "fio": "Зайнулабидов Шамиль Магомедович",
+    "birthday": "",
+    "father": "1733376803894_ygzh",
+    "mother": "",
     "wife": [],
     "friends": [],
     "colleagues": [],

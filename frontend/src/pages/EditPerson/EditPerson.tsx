@@ -44,6 +44,7 @@ function EditPerson() {
   } = useForm<TInputs>({
     defaultValues: async () =>  GetPersonByID(id)
       .then((item) => {
+        console.log("_item--", item);
         return(item);
       }),
   });
