@@ -39,37 +39,37 @@ type TInputsOut = {
 type TInputsKeys = keyof TInputs;
 
 function EditPerson() {
-  const { id = "0" } = useParams();
+  const {id = "0"} = useParams();
 
   const {
     handleSubmit,
     control,
   } = useForm<TInputs>({
-    defaultValues: async () =>  GetPersonByID(id)
+    defaultValues: async () => GetPersonByID(id)
       .then((item) => {
-        return(item);
+        return (item);
       }),
   });
 
   const [apiPersons, setApiPersons] = useState<TPersonId[]>([]);
 
-  const onSubmit: SubmitHandler<TInputs> = (data) =>  {
+  const onSubmit: SubmitHandler<TInputs> = (data) => {
     const newPersons: TInputsOut[] = [];
 
     const personObject = (value: TPersonId) => {
-      if (!value) return { id: "" };
+      if (!value) return {id: ""};
 
       if (value.id) {
         return value;
       }
 
       if (value.fio) {
-        const item = { ...value, id: setPersonId(value.fio) };
+        const item = {...value, id: setPersonId(value.fio)};
         newPersons.push(item as TInputsOut);
         return item;
       }
 
-      return { id: "" };
+      return {id: ""};
     };
 
     const personAddConst = Object.keys(data).reduce((acc, key) => {
@@ -86,7 +86,7 @@ function EditPerson() {
 
       return acc;
     }, {} as Record<TInputsKeys, string | string[]>);
-    
+
     const updatePerson = {
       ...personAddConst,
       id: data.id,
@@ -113,140 +113,139 @@ function EditPerson() {
       // eslint-disable-next-line no-console
       .catch((errors) => console.log("Error: GetAllPerson", errors));
   }, []);
-  
+
   return (
     <LayoutMain title="Редактировать">
       <div className="intro-y col-span-12 lg:col-span-6">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="intro-y box p-5">
-            <Controller
-              name="fio"
-              control={control}
-              render={({field: {value, onChange}, fieldState: {error}}) => (
-                <TextInputSearch
-                  label="ФИО"
-                  value={value}
-                  onChange={onChange}
-                  error={error}
-                  data={apiPersons}
-                />
-              )}
-            />
-            <Controller
-              name="birthday"
-              control={control}
-              render={({field: {value, onChange}}) => (
-                <TextInput label="Дата рождения" value={value} onChange={onChange} className="mt-4"/>
-              )}
-            />
-            <Controller
-              name="wife"
-              control={control}
-              render={({field: {value, onChange,}, fieldState: {error}}) => (
-                <TextInputSelect
-                  label="Жена"
-                  value={value || []}
-                  onChange={onChange}
-                  error={error}
-                  data={apiPersons}
-                  className="mt-4"
-                  multiple
-                />
-              )}
-            />
-            <Controller
-              name="father"
-              control={control}
-              render={({field: {value, onChange}, fieldState: {error}}) => (
-                <TextInputSelect
-                  label="Отец"
-                  value={value}
-                  inputValue={value?.fio}
-                  onChange={onChange}
-                  error={error}
-                  data={apiPersons}
-                  className="mt-4"
-                />
-              )}
-            />
-            <Controller
-              name="mother"
-              control={control}
-              render={({field: {value, onChange}, fieldState: {error}}) => (
-                <TextInputSelect
-                  label="Мать"
-                  value={value}
-                  inputValue={value?.fio}
-                  onChange={onChange}
-                  error={error}
-                  data={apiPersons}
-                  className="mt-4"
-                />
-              )}
-            />
-            <Controller
-              name="friends"
-              control={control}
-              render={({field: {value, onChange,}, fieldState: {error}}) => (
-                <TextInputSelect
-                  label="Друзья"
-                  value={value || []}
-                  onChange={onChange}
-                  error={error}
-                  data={apiPersons}
-                  className="mt-4"
-                  multiple
-                />
-              )}
-            />
-            <Controller
-              name="colleagues"
-              control={control}
-              render={({field: {value, onChange,}, fieldState: {error}}) => (
-                <TextInputSelect
-                  label="Коллеги"
-                  value={value || []}
-                  onChange={onChange}
-                  error={error}
-                  data={apiPersons}
-                  className="mt-4"
-                  multiple
-                />
-              )}
-            />
-            <Controller
-              name="familiar"
-              control={control}
-              render={({field: {value, onChange,}, fieldState: {error}}) => (
-                <TextInputSelect
-                  label="Знакомые"
-                  value={value || []}
-                  onChange={onChange}
-                  error={error}
-                  data={apiPersons}
-                  className="mt-4"
-                  multiple
-                />
-              )}
-            />
-            <Controller
-              name="comments"
-              control={control}
-              render={({field: {value, onChange,}, fieldState: {error}}) => (
-                <Textarea
-                  label="Комментарий"
-                  value={value}
-                  onChange={onChange}
-                  error={error}
-                  rows={5}
-                  className="mt-4"
-                />
-              )}
-            />
-            <div className="mt-5 text-right">
-              <button
-                type="button"
-                className="
+        <form onSubmit={handleSubmit(onSubmit)} className="intro-y box p-5">
+          <Controller
+            name="fio"
+            control={control}
+            render={({field: {value, onChange}, fieldState: {error}}) => (
+              <TextInputSearch
+                label="ФИО"
+                value={value}
+                onChange={onChange}
+                error={error}
+                data={apiPersons}
+              />
+            )}
+          />
+          <Controller
+            name="birthday"
+            control={control}
+            render={({field: {value, onChange}}) => (
+              <TextInput label="Дата рождения" value={value} onChange={onChange} className="mt-4"/>
+            )}
+          />
+          <Controller
+            name="wife"
+            control={control}
+            render={({field: {value, onChange,}, fieldState: {error}}) => (
+              <TextInputSelect
+                label="Жена"
+                value={value || []}
+                onChange={onChange}
+                error={error}
+                data={apiPersons}
+                className="mt-4"
+                multiple
+              />
+            )}
+          />
+          <Controller
+            name="father"
+            control={control}
+            render={({field: {value, onChange}, fieldState: {error}}) => (
+              <TextInputSelect
+                label="Отец"
+                value={value}
+                inputValue={value?.fio}
+                onChange={onChange}
+                error={error}
+                data={apiPersons}
+                className="mt-4"
+              />
+            )}
+          />
+          <Controller
+            name="mother"
+            control={control}
+            render={({field: {value, onChange}, fieldState: {error}}) => (
+              <TextInputSelect
+                label="Мать"
+                value={value}
+                inputValue={value?.fio}
+                onChange={onChange}
+                error={error}
+                data={apiPersons}
+                className="mt-4"
+              />
+            )}
+          />
+          <Controller
+            name="friends"
+            control={control}
+            render={({field: {value, onChange,}, fieldState: {error}}) => (
+              <TextInputSelect
+                label="Друзья"
+                value={value || []}
+                onChange={onChange}
+                error={error}
+                data={apiPersons}
+                className="mt-4"
+                multiple
+              />
+            )}
+          />
+          <Controller
+            name="colleagues"
+            control={control}
+            render={({field: {value, onChange,}, fieldState: {error}}) => (
+              <TextInputSelect
+                label="Коллеги"
+                value={value || []}
+                onChange={onChange}
+                error={error}
+                data={apiPersons}
+                className="mt-4"
+                multiple
+              />
+            )}
+          />
+          <Controller
+            name="familiar"
+            control={control}
+            render={({field: {value, onChange,}, fieldState: {error}}) => (
+              <TextInputSelect
+                label="Знакомые"
+                value={value || []}
+                onChange={onChange}
+                error={error}
+                data={apiPersons}
+                className="mt-4"
+                multiple
+              />
+            )}
+          />
+          <Controller
+            name="comments"
+            control={control}
+            render={({field: {value, onChange,}, fieldState: {error}}) => (
+              <Textarea
+                label="Комментарий"
+                value={value}
+                onChange={onChange}
+                error={error}
+                rows={5}
+                className="mt-4"
+              />
+            )}
+          />
+          <div className="mt-5 text-right">
+            <button
+              type="button"
+              className="
               [&:hover:not(:disabled)]:bg-opacity-90
               [&:hover:not(:disabled)]:bg-secondary/20
               [&:hover:not(:disabled)]:border-opacity-90
@@ -273,16 +272,15 @@ function EditPerson() {
               text-slate-500
               transition
               w-32"
-              >
-                Отменить
-              </button>
-              <button
-                type="submit"
-                className="transition duration-200 border shadow-sm inline-flex items-center justify-center py-2 px-5 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed bg-primary border-primary text-white dark:border-primary w-32"
-              >
-                Добавить
-              </button>
-            </div>
+            >
+              Отменить
+            </button>
+            <button
+              type="submit"
+              className="transition duration-200 border shadow-sm inline-flex items-center justify-center py-2 px-5 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed bg-primary border-primary text-white dark:border-primary w-32"
+            >
+              Добавить
+            </button>
           </div>
         </form>
       </div>
