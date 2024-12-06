@@ -77,21 +77,20 @@ func (a *App) LoadFromJSON() ([]Person, error) {
 		return nil, fmt.Errorf("failed to unmarshal JSON: %w", err)
 	}
 
-	for _, person := range people {
-		fmt.Printf("Person: %s", person)
-		fmt.Println()
-	}
+	//for _, person := range people {
+	//	fmt.Printf("Person: %s", person)
+	//	fmt.Println()
+	//}
 
 	return people, nil
 }
 
 func (a *App) SaveUsersToJSONFile(families []Person) []Person {
 	// Создаем экземпляр приложения
-	app := NewApp()
 	filename := personsFilePath
 
 	// Load existing data from the file
-	people, err := app.LoadFromJSON()
+	people, err := a.LoadFromJSON()
 	if err != nil {
 		log.Fatalf("failed to load data: %s", err)
 	}
@@ -113,7 +112,7 @@ func (a *App) SaveUsersToJSONFile(families []Person) []Person {
 	}
 
 	// Save the updated data back to the file
-	err = app.SaveToJSON(filename, people)
+	err = a.SaveToJSON(filename, people)
 	if err != nil {
 		log.Fatalf("failed to save data: %s", err)
 	}
@@ -249,7 +248,7 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 	for _, friendId := range person.Friends {
 		friend, err := a.GetPersonByIdAndFio(friendId)
 		if err != nil {
-			return PersonWithDetails{}, fmt.Errorf("failed to load wife data: %w", err)
+			return PersonWithDetails{}, fmt.Errorf("failed to load friend data: %w", err)
 		}
 		friendObjects = append(friendObjects, friend)
 	}
@@ -258,7 +257,7 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 	for _, colleagueId := range person.Colleagues {
 		colleague, err := a.GetPersonByIdAndFio(colleagueId)
 		if err != nil {
-			return PersonWithDetails{}, fmt.Errorf("failed to load wife data: %w", err)
+			return PersonWithDetails{}, fmt.Errorf("failed to load colleague data: %w", err)
 		}
 		colleagueObjects = append(colleagueObjects, colleague)
 	}
@@ -267,7 +266,7 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 	for _, familiarId := range person.Familiar {
 		familiar, err := a.GetPersonByIdAndFio(familiarId)
 		if err != nil {
-			return PersonWithDetails{}, fmt.Errorf("failed to load wife data: %w", err)
+			return PersonWithDetails{}, fmt.Errorf("failed to load familiar data: %w", err)
 		}
 		familiarObjects = append(familiarObjects, familiar)
 	}
@@ -296,4 +295,36 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 	}
 
 	return personWithDetails, nil
+}
+
+// UpdatePersonByID обновляет данные пользователя по ID
+func (a *App) UpdatePersonByID(id string, updatedPerson Person, newPersons []Person) (string, error) {
+	people, err := a.LoadFromJSON()
+	if err != nil {
+		return updatedPerson.ID, fmt.Errorf("failed to load persons: %w", err)
+	}
+
+	var found bool
+	for i, person := range people {
+		if person.ID == id {
+			people[i] = updatedPerson
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return updatedPerson.ID, fmt.Errorf("person with ID %s not found", id)
+	}
+
+	// Добавляем новых пользователей
+	people = append(people, newPersons...)
+
+	// Сохраняем обновленные данные обратно в JSON файл
+	err = a.SaveToJSON(personsFilePath, people)
+	if err != nil {
+		return updatedPerson.ID, fmt.Errorf("failed to save data: %w", err)
+	}
+
+	return updatedPerson.ID, nil
 }

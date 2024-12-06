@@ -1,15 +1,13 @@
 import {useEffect, useState} from "react";
-import {yupResolver} from "@hookform/resolvers/yup";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {useParams} from "react-router-dom";
-import {addUserSchema} from "src/pages/AddPerson/AddPersonForm/lib/schema/addUser";
 import {setPersonId} from "src/shared/lib/helpers/setPersonId";
 import {TextInput} from "src/shared/ui/TextInput";
 import {TextInputSearch} from "src/shared/ui/TextInputSearch";
 import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
 import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {LayoutMain} from "src/widgets/template/LayoutMain";
-import {GetAllPerson, GetPersonByID, SaveUsersToJSONFile} from "../../../wailsjs/go/main/App";
+import {GetAllPerson, GetPersonByID, UpdatePersonByID} from "../../../wailsjs/go/main/App";
 
 type TInputs = {
   id: string;
@@ -43,32 +41,17 @@ function EditPerson() {
   const {
     handleSubmit,
     control,
-    setError,
   } = useForm<TInputs>({
     defaultValues: async () =>  GetPersonByID(id)
       .then((item) => {
         return(item);
       }),
-    resolver: yupResolver(addUserSchema),
   });
 
   const [apiPersons, setApiPersons] = useState<TPersonId[]>([]);
 
   const onSubmit: SubmitHandler<TInputs> = (data) =>  {
-    const isDuplicate = apiPersons.some(
-      item => item.fio.toLowerCase().trim() === data.fio.toLowerCase().trim()
-    );
-
-    if (isDuplicate) {
-      setError("fio", {
-        type: "manual",
-        message: "Поле дублируется, введите другое значение",
-      });
-      return;
-    }
-
-    const mainPersonId = setPersonId(data.fio);
-    const newPersons: TPersonId[] = [];
+    const newPersons: TInputsOut[] = [];
 
     const personObject = (value: TPersonId) => {
       if (!value) return { id: "" };
@@ -79,7 +62,7 @@ function EditPerson() {
 
       if (value.fio) {
         const item = { ...value, id: setPersonId(value.fio) };
-        newPersons.push(item);
+        newPersons.push(item as TInputsOut);
         return item;
       }
 
@@ -100,20 +83,21 @@ function EditPerson() {
 
       return acc;
     }, {} as Record<TInputsKeys, string | string[]>);
+    
+    const updatePerson = {
+      ...personAddConst,
+      id: data.id,
+    } as TInputsOut;
 
-    const addNewPersons = [
-      {
-        ...personAddConst,
-        id: mainPersonId,
-      },
-      ...newPersons,
-    ];
-
-    SaveUsersToJSONFile(addNewPersons as TInputsOut[])
+    UpdatePersonByID(data.id, updatePerson, newPersons)
       // eslint-disable-next-line no-console
-      .then((item) => console.log("Add new person", item))
+      .then((item) => console.log(
+        "%c Update person %c " + item + " ",
+        "background: #aa0000; color: #fff; border-radius: 3px 0px 0px 3px; padding: 1px; font-size: 0.7rem",
+        "background: #009900; color: #fff; border-radius: 0px 3px 3px 0px; padding: 1px; font-size: 0.7rem"
+      ))
       // eslint-disable-next-line no-console
-      .catch((errors) => console.log("Errors: Add new person", errors));
+      .catch((errors) => console.log("Errors: Update person", errors));
   };
 
   useEffect(() => {
@@ -158,7 +142,7 @@ function EditPerson() {
               render={({field: {value, onChange,}, fieldState: {error}}) => (
                 <TextInputSelect
                   label="Жена"
-                  value={value}
+                  value={value || []}
                   onChange={onChange}
                   error={error}
                   data={apiPersons}
@@ -203,7 +187,7 @@ function EditPerson() {
               render={({field: {value, onChange,}, fieldState: {error}}) => (
                 <TextInputSelect
                   label="Друзья"
-                  value={value}
+                  value={value || []}
                   onChange={onChange}
                   error={error}
                   data={apiPersons}
@@ -218,7 +202,7 @@ function EditPerson() {
               render={({field: {value, onChange,}, fieldState: {error}}) => (
                 <TextInputSelect
                   label="Коллеги"
-                  value={value}
+                  value={value || []}
                   onChange={onChange}
                   error={error}
                   data={apiPersons}
@@ -233,7 +217,7 @@ function EditPerson() {
               render={({field: {value, onChange,}, fieldState: {error}}) => (
                 <TextInputSelect
                   label="Знакомые"
-                  value={value}
+                  value={value || []}
                   onChange={onChange}
                   error={error}
                   data={apiPersons}

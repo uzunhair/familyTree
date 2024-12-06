@@ -29,11 +29,12 @@
     "father": "1733376384970_yzhs",
     "mother": "1733376384970_rkr",
     "wife": [
-      "1733376384970_yir"
+      "1733376384970_yir",
+      "1733377018523_yszh"
     ],
-    "friends": [],
-    "colleagues": [],
-    "familiar": []
+    "friends": null,
+    "colleagues": null,
+    "familiar": null
   },
   {
     "id": "1733376384970_yir",
