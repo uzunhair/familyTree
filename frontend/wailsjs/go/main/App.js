@@ -6,6 +6,14 @@ export function GetAllPerson() {
   return window['go']['main']['App']['GetAllPerson']();
 }
 
+export function GetPersonByID(arg1) {
+  return window['go']['main']['App']['GetPersonByID'](arg1);
+}
+
+export function GetPersonByIdAndFio(arg1) {
+  return window['go']['main']['App']['GetPersonByIdAndFio'](arg1);
+}
+
 export function GetPersonList(arg1) {
   return window['go']['main']['App']['GetPersonList'](arg1);
 }

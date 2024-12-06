@@ -1,9 +1,9 @@
 import React from "react";
 import {createRoot} from "react-dom/client";
 import {Route, Routes, HashRouter} from "react-router-dom";
-import EditPerson from "src/EditPerson";
 import AddPerson from "src/pages/AddPerson";
 import {AllPersons} from "src/pages/AllPersons";
+import EditPerson from "src/pages/EditPerson";
 import {links} from "src/shared/lib/helpers/links";
 import App from "./App";
 import "./style.scss";
@@ -24,9 +24,9 @@ root.render(
       <Routes>
         <Route path="/" element={<AddPerson />} />
         <Route path={links.addPerson} element={<AddPerson />} />
+        <Route path={links.editPerson(":id")} element={<EditPerson />} />
         <Route path={links.allPersons} element={<AllPersons />} />
         <Route path="/test" element={<App/>} />
-        <Route path="edit-person" element={<EditPerson />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>

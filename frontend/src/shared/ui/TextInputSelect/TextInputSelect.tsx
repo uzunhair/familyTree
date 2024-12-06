@@ -6,11 +6,18 @@ import styles from "../TextInputSearch/TextInputSearch.module.scss";
 type TTextInputSelect = Omit<TTextInput, "onChange" | "value"> & {
   data: TPersonId[];
   value: TPersonId | TPersonId[];
+  inputValue?: string;
   onChange: (value: TPersonId | TPersonId[]) => void;
   multiple?: boolean;
 };
 
-export const TextInputSelect = ({ data, value, multiple: multipleProp = false, ...props }: TTextInputSelect) => {
+export const TextInputSelect = ({ 
+  data, 
+  value, 
+  multiple: multipleProp = false, 
+  inputValue: defaultInputValue = "",
+  ...props 
+}: TTextInputSelect) => {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [selectedFromData, setSelectedFromData] = useState<TPersonId[]>([]);
@@ -79,6 +86,10 @@ export const TextInputSelect = ({ data, value, multiple: multipleProp = false, .
     const searchResults = data.filter(item => item.fio.toLowerCase().includes(inputValue.toLowerCase()));
     setSelectedFromData(searchResults);
   }, [inputValue, data]);
+
+  useEffect(() => {
+    setInputValue(defaultInputValue);
+  }, [defaultInputValue]);
 
   return (
     <div className={styles.layout}>

@@ -162,7 +162,7 @@ export const AllPersons = () => {
                   </svg>
                 </div>
                 <div className="mt-3 text-center lg:ml-2 lg:mr-auto lg:mt-0 lg:text-left">
-                  <Link className="font-medium" to="">
+                  <Link className="font-medium" to={links.editPerson(item.id)}>
                     {item.fio}
                   </Link>
                   <div className="mt-0.5 text-xs text-slate-500">Дата рождения 27.07.1991</div>
@@ -185,7 +185,8 @@ export const AllPersons = () => {
                     ></div>
                   </div>
                 </div>
-                <button
+                <Link
+                  to={links.editPerson(item.id)}
                   className="
                     transition
                     duration-200
@@ -213,7 +214,7 @@ export const AllPersons = () => {
                     py-1"
                 >
                   Открыть
-                </button>
+                </Link>
               </div>
             </div>
           </div>

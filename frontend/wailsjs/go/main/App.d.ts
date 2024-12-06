@@ -4,6 +4,10 @@ import {main} from '../models';
 
 export function GetAllPerson():Promise<Array<main.PersonId>>;
 
+export function GetPersonByID(arg1:string):Promise<main.PersonWithDetails>;
+
+export function GetPersonByIdAndFio(arg1:string):Promise<main.PersonId>;
+
 export function GetPersonList(arg1:string):Promise<main.SearchResult>;
 
 export function Greet(arg1:string):Promise<string>;
