@@ -1,4 +1,5 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import {getDeclensionOfMatches} from "src/shared/lib/helpers/getDeclensionOfMatches";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import styles from "./TextInputSearch.module.scss";
 
@@ -58,7 +59,7 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
         {!!filteredData.length && searchTerm && isFocused && (
           <div className={styles.dropdown}>
             <div className="p-2 px-3 font-medium">
-              {filteredData.length} совпадений
+              {getDeclensionOfMatches(filteredData.length)}
             </div>
             <div className="h-px bg-slate-200/60 dark:bg-darkmode-400" />
             <div className={styles.scroll}>

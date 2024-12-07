@@ -1,4 +1,5 @@
 import React, { ChangeEvent, MouseEvent, KeyboardEvent, useEffect, useState } from "react";
+import {getDeclensionOfMatches} from "src/shared/lib/helpers/getDeclensionOfMatches";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import { TInputItem } from "src/shared/ui/TextInputSearch/TextInputSearch";
 import styles from "../TextInputSearch/TextInputSearch.module.scss";
@@ -111,7 +112,7 @@ export const TextInputSelect = ({
             {!onlySelect && (
               <>
                 <div className="p-2 px-3 font-medium">
-                  {selectedFromData.length} совпадений
+                  {getDeclensionOfMatches(selectedFromData.length)}
                 </div>
                 <div className="h-px bg-slate-200/60 dark:bg-darkmode-400"/>
               </>
