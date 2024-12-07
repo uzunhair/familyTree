@@ -1,32 +1,39 @@
 import {useEffect, useState} from "react";
+import {yupResolver} from "@hookform/resolvers/yup";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {useParams} from "react-router-dom";
+import {GenderInput} from "src/pages/EditPerson/GenderInput";
+import {editUserSchema} from "src/pages/EditPerson/lib/schema/editUser";
+import {GENDER, getGenderById} from "src/shared/lib/helpers/getGender";
 import {setPersonId} from "src/shared/lib/helpers/setPersonId";
+import {User, Users} from "src/shared/ui/Icon";
+import {Textarea} from "src/shared/ui/Textarea";
 import {TextInput} from "src/shared/ui/TextInput";
 import {TextInputSearch} from "src/shared/ui/TextInputSearch";
-import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
+import {TInputItem} from "src/shared/ui/TextInputSearch/TextInputSearch";
 import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {LayoutMain} from "src/widgets/template/LayoutMain";
 import {GetAllPerson, GetPersonByID, UpdatePersonByID} from "../../../wailsjs/go/main/App";
-import {Textarea} from "src/shared/ui/Textarea";
 
 type TInputs = {
   id: string;
-  fio: string;
+  title: string;
   birthday: string;
-  father: TPersonId;
-  mother: TPersonId;
-  wife: TPersonId[];
-  friends: TPersonId[];
-  colleagues: TPersonId[];
-  familiar: TPersonId[];
+  gender: TInputItem;
+  father: TInputItem;
+  mother: TInputItem;
+  wife: TInputItem[];
+  friends: TInputItem[];
+  colleagues: TInputItem[];
+  familiar: TInputItem[];
   comments: string;
 }
 
 type TInputsOut = {
   id: string;
-  fio: string;
+  title: string;
   birthday: string;
+  gender: string;
   father: string;
   mother: string;
   wife: string[];
@@ -47,24 +54,27 @@ function EditPerson() {
   } = useForm<TInputs>({
     defaultValues: async () => GetPersonByID(id)
       .then((item) => {
-        return (item);
+        return ({
+          ...item, gender: getGenderById(item.gender)
+        });
       }),
+    resolver: yupResolver(editUserSchema),
   });
 
-  const [apiPersons, setApiPersons] = useState<TPersonId[]>([]);
+  const [apiPersons, setApiPersons] = useState<TInputItem[]>([]);
 
   const onSubmit: SubmitHandler<TInputs> = (data) => {
     const newPersons: TInputsOut[] = [];
 
-    const personObject = (value: TPersonId) => {
+    const personObject = (value: TInputItem) => {
       if (!value) return {id: ""};
 
       if (value.id) {
         return value;
       }
 
-      if (value.fio) {
-        const item = {...value, id: setPersonId(value.fio)};
+      if (value.title && value.id !== "empty") {
+        const item = {...value, id: setPersonId(value.title)};
         newPersons.push(item as TInputsOut);
         return item;
       }
@@ -119,7 +129,7 @@ function EditPerson() {
       <div className="intro-y col-span-12 lg:col-span-6">
         <form onSubmit={handleSubmit(onSubmit)} className="intro-y box p-5">
           <Controller
-            name="fio"
+            name="title"
             control={control}
             render={({field: {value, onChange}, fieldState: {error}}) => (
               <TextInputSearch
@@ -131,13 +141,16 @@ function EditPerson() {
               />
             )}
           />
-          <Controller
-            name="birthday"
-            control={control}
-            render={({field: {value, onChange}}) => (
-              <TextInput label="Дата рождения" value={value} onChange={onChange} className="mt-4"/>
-            )}
-          />
+          <div className="grid grid-cols-12 gap-6">
+            <Controller
+              name="birthday"
+              control={control}
+              render={({field: {value, onChange}}) => (
+                <TextInput label="Дата рождения" value={value} onChange={onChange} className="mt-4 col-span-12 lg:col-span-6"/>
+              )}
+            />
+            <GenderInput control={control} />
+          </div>
           <Controller
             name="wife"
             control={control}
@@ -150,6 +163,7 @@ function EditPerson() {
                 data={apiPersons}
                 className="mt-4"
                 multiple
+                icon={<Users />}
               />
             )}
           />
@@ -160,11 +174,12 @@ function EditPerson() {
               <TextInputSelect
                 label="Отец"
                 value={value}
-                inputValue={value?.fio}
+                inputValue={value?.title}
                 onChange={onChange}
                 error={error}
                 data={apiPersons}
                 className="mt-4"
+                icon={<User />}
               />
             )}
           />
@@ -175,10 +190,11 @@ function EditPerson() {
               <TextInputSelect
                 label="Мать"
                 value={value}
-                inputValue={value?.fio}
+                inputValue={value?.title}
                 onChange={onChange}
                 error={error}
                 data={apiPersons}
+                icon={<User />}
                 className="mt-4"
               />
             )}
@@ -195,6 +211,7 @@ function EditPerson() {
                 data={apiPersons}
                 className="mt-4"
                 multiple
+                icon={<Users />}
               />
             )}
           />
@@ -210,6 +227,7 @@ function EditPerson() {
                 data={apiPersons}
                 className="mt-4"
                 multiple
+                icon={<Users />}
               />
             )}
           />
@@ -225,6 +243,7 @@ function EditPerson() {
                 data={apiPersons}
                 className="mt-4"
                 multiple
+                icon={<Users />}
               />
             )}
           />

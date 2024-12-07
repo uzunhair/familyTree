@@ -1,9 +1,24 @@
 export namespace main {
 	
-	export class Person {
+	export class BasicPersonInfo {
 	    id: string;
-	    fio: string;
+	    title: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new BasicPersonInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.title = source["title"];
+	    }
+	}
+	export class FullPersonInfo {
+	    id: string;
+	    title: string;
 	    birthday: string;
+	    gender: string;
 	    father: string;
 	    mother: string;
 	    wife: string[];
@@ -13,14 +28,15 @@ export namespace main {
 	    comments: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new Person(source);
+	        return new FullPersonInfo(source);
 	    }
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
-	        this.fio = source["fio"];
+	        this.title = source["title"];
 	        this.birthday = source["birthday"];
+	        this.gender = source["gender"];
 	        this.father = source["father"];
 	        this.mother = source["mother"];
 	        this.wife = source["wife"];
@@ -30,30 +46,17 @@ export namespace main {
 	        this.comments = source["comments"];
 	    }
 	}
-	export class PersonId {
-	    id: string;
-	    fio: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new PersonId(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.fio = source["fio"];
-	    }
-	}
 	export class PersonWithDetails {
 	    id: string;
-	    fio: string;
+	    title: string;
 	    birthday: string;
-	    father: PersonId;
-	    mother: PersonId;
-	    wife: PersonId[];
-	    friends: PersonId[];
-	    colleagues: PersonId[];
-	    familiar: PersonId[];
+	    gender: string;
+	    father: BasicPersonInfo;
+	    mother: BasicPersonInfo;
+	    wife: BasicPersonInfo[];
+	    friends: BasicPersonInfo[];
+	    colleagues: BasicPersonInfo[];
+	    familiar: BasicPersonInfo[];
 	    comments: string;
 	
 	    static createFrom(source: any = {}) {
@@ -63,14 +66,15 @@ export namespace main {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
-	        this.fio = source["fio"];
+	        this.title = source["title"];
 	        this.birthday = source["birthday"];
-	        this.father = this.convertValues(source["father"], PersonId);
-	        this.mother = this.convertValues(source["mother"], PersonId);
-	        this.wife = this.convertValues(source["wife"], PersonId);
-	        this.friends = this.convertValues(source["friends"], PersonId);
-	        this.colleagues = this.convertValues(source["colleagues"], PersonId);
-	        this.familiar = this.convertValues(source["familiar"], PersonId);
+	        this.gender = source["gender"];
+	        this.father = this.convertValues(source["father"], BasicPersonInfo);
+	        this.mother = this.convertValues(source["mother"], BasicPersonInfo);
+	        this.wife = this.convertValues(source["wife"], BasicPersonInfo);
+	        this.friends = this.convertValues(source["friends"], BasicPersonInfo);
+	        this.colleagues = this.convertValues(source["colleagues"], BasicPersonInfo);
+	        this.familiar = this.convertValues(source["familiar"], BasicPersonInfo);
 	        this.comments = source["comments"];
 	    }
 	
@@ -93,7 +97,7 @@ export namespace main {
 		}
 	}
 	export class SearchResult {
-	    persons: Person[];
+	    persons: FullPersonInfo[];
 	    count: number;
 	
 	    static createFrom(source: any = {}) {
@@ -102,7 +106,7 @@ export namespace main {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.persons = this.convertValues(source["persons"], Person);
+	        this.persons = this.convertValues(source["persons"], FullPersonInfo);
 	        this.count = source["count"];
 	    }
 	

@@ -1,26 +1,29 @@
 import React, { ChangeEvent, MouseEvent, KeyboardEvent, useEffect, useState } from "react";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
-import { TPersonId } from "src/shared/ui/TextInputSearch/TextInputSearch";
+import { TInputItem } from "src/shared/ui/TextInputSearch/TextInputSearch";
 import styles from "../TextInputSearch/TextInputSearch.module.scss";
 
 type TTextInputSelect = Omit<TTextInput, "onChange" | "value"> & {
-  data: TPersonId[];
-  value: TPersonId | TPersonId[];
+  data: TInputItem[];
+  value: TInputItem | TInputItem[];
   inputValue?: string;
-  onChange: (value: TPersonId | TPersonId[]) => void;
+  onChange: (value: TInputItem | TInputItem[]) => void;
   multiple?: boolean;
+  onlySelect?: boolean;
 };
 
 export const TextInputSelect = ({ 
   data, 
-  value, 
-  multiple: multipleProp = false, 
+  value,
+  className,
+  onlySelect,
+  multiple: multipleProp = false,
   inputValue: defaultInputValue = "",
   ...props 
 }: TTextInputSelect) => {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const [selectedFromData, setSelectedFromData] = useState<TPersonId[]>([]);
+  const [selectedFromData, setSelectedFromData] = useState<TInputItem[]>([]);
   const multiple = multipleProp && Array.isArray(value);
   
   const handleChangeInput  = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +31,7 @@ export const TextInputSelect = ({
     setInputValue(value);
 
     if(!multiple) {
-      props.onChange({ id: "", fio: value });
+      props.onChange({ id: "", title: value });
     }
   };
 
@@ -37,10 +40,10 @@ export const TextInputSelect = ({
       event.preventDefault();
 
       if(multiple) {
-        const findItem = data.find(item => item.fio === inputValue);
-        const isUnique = value.some(item => item.fio === inputValue);
-        const outValue = findItem || {id: "", fio: inputValue};
-        if (!isUnique && outValue.fio) {
+        const findItem = data.find(item => item.title === inputValue);
+        const isUnique = value.some(item => item.title === inputValue);
+        const outValue = findItem || {id: "", title: inputValue};
+        if (!isUnique && outValue.title) {
           props.onChange([...value, outValue]);
           setInputValue("");
         }
@@ -48,20 +51,20 @@ export const TextInputSelect = ({
     }
   };
 
-  const handleItemDelete = (person: TPersonId) => {
-    const selectedValues = value as TPersonId[];
-    const index = selectedValues.findIndex(item => item.fio === person.fio);
+  const handleItemDelete = (person: TInputItem) => {
+    const selectedValues = value as TInputItem[];
+    const index = selectedValues.findIndex(item => item.title === person.title);
     if (index > -1) {
       selectedValues.splice(index, 1);
     }
     props.onChange(selectedValues);
   };
 
-  const handleItemClick = (event: MouseEvent, person: TPersonId) => {
+  const handleItemClick = (event: MouseEvent, person: TInputItem) => {
     event.preventDefault();
     if (multiple) {
       const selectedValues = Array.isArray(value) ? [...value] : [];
-      const index = selectedValues.findIndex(item => item.fio === person.fio);
+      const index = selectedValues.findIndex(item => item.title === person.title);
       if (index > -1) {
         selectedValues.splice(index, 1);
       } else {
@@ -69,7 +72,7 @@ export const TextInputSelect = ({
       }
       props.onChange(selectedValues);
     } else {
-      setInputValue(person.fio);
+      setInputValue(person.title);
       props.onChange(person);
     }
   };
@@ -83,8 +86,9 @@ export const TextInputSelect = ({
   };
 
   useEffect(() => {
-    const searchResults = data.filter(item => item.fio.toLowerCase().includes(inputValue.toLowerCase()));
-    setSelectedFromData(searchResults);
+    const filter = data.filter(item => item.title.toLowerCase().includes(inputValue.toLowerCase()));
+    const result = onlySelect ? data : filter;
+    setSelectedFromData(result);
   }, [inputValue, data]);
 
   useEffect(() => {
@@ -92,42 +96,26 @@ export const TextInputSelect = ({
   }, [defaultInputValue]);
 
   return (
-    <div className={styles.layout}>
+    <div className={`${styles.layout} ${className}`}>
       <TextInput
         {...props}
+        type={onlySelect ? "button" : props.type}
         value={inputValue}
         onChange={handleChangeInput}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        icon={
-          <>
-            {multiple ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="users"
-                className="lucide lucide-users stroke-1.5 w-5 h-5 mx-auto block">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-            ): (
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                data-lucide="user" className="lucide lucide-user stroke-1.5 w-5 h-5 mx-auto block">
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            )}
-          </>
-        }
       >
         {!!selectedFromData.length && isFocused && (
           <div className={styles.dropdown}>
-            <div className="p-2 px-3 font-medium">
-              {selectedFromData.length} совпадений
-            </div>
-            <div className="h-px bg-slate-200/60 dark:bg-darkmode-400"/>
+            {!onlySelect && (
+              <>
+                <div className="p-2 px-3 font-medium">
+                  {selectedFromData.length} совпадений
+                </div>
+                <div className="h-px bg-slate-200/60 dark:bg-darkmode-400"/>
+              </>
+            )}
             <div className={styles.scroll}>
               {selectedFromData.map(person => {
                 const isSelected = multiple && Array.isArray(value) && value.some(v => v.id === person.id);
@@ -139,7 +127,7 @@ export const TextInputSelect = ({
                     className={`${styles.item} ${isSelected ? styles.selected : ""}`}
                     onMouseDown={(event) => handleItemClick(event, person)}
                   >
-                    {person.fio}
+                    {person.title}
                   </div>
                 );
               })}
@@ -153,7 +141,7 @@ export const TextInputSelect = ({
           {value.map(v => {
             return (
               <button
-                key={v.fio + v.id}
+                key={v.title + v.id}
                 title={v.id ? `ID пользователя: ${v.id}` : "Пользователь еще не добавлен"}
                 onClick={() => handleItemDelete(v)}
                 className="
@@ -178,7 +166,7 @@ export const TextInputSelect = ({
                   rounded-md
                   text-slate-500
             ">
-                {v.fio}
+                {v.title}
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"

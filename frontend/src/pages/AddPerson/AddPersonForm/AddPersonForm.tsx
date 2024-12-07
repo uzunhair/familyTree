@@ -1,30 +1,33 @@
 import {useEffect, useState} from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import {GenderInput} from "src/pages/EditPerson/GenderInput";
+import {getGenderById} from "src/shared/lib/helpers/getGender";
 import {setPersonId} from "src/shared/lib/helpers/setPersonId";
 import {TextInput} from "src/shared/ui/TextInput";
 import {TextInputSearch} from "src/shared/ui/TextInputSearch";
-import {TPersonId} from "src/shared/ui/TextInputSearch/TextInputSearch";
+import {TInputItem} from "src/shared/ui/TextInputSearch/TextInputSearch";
 import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {addUserSchema} from "./lib/schema/addUser";
 import {SaveUsersToJSONFile, GetAllPerson} from "../../../../wailsjs/go/main/App";
 
 type TInputs = {
   id: string;
-  fio: string;
+  title: string;
   birthday: string;
-  father: TPersonId;
-  mother: TPersonId;
-  wife: TPersonId[];
-  friends: TPersonId[];
-  colleagues: TPersonId[];
-  familiar: TPersonId[];
+  father: TInputItem;
+  mother: TInputItem;
+  wife: TInputItem[];
+  friends: TInputItem[];
+  colleagues: TInputItem[];
+  familiar: TInputItem[];
   comments: string;
+  gender: TInputItem;
 }
 
 type TInputsOut = {
   id: string;
-  fio: string;
+  title: string;
   birthday: string;
   father: string;
   mother: string;
@@ -33,27 +36,29 @@ type TInputsOut = {
   colleagues: string[];
   familiar: string[];
   comments: string;
+  gender: string;
 }
 
 type TInputsKeys = keyof TInputs;
 
 const defaultValues: TInputs = {
   id: "",
-  fio: "",
+  title: "",
   birthday: "",
   wife: [],
   father: {
     id: "",
-    fio: ""
+    title: ""
   },
   mother: {
     id: "",
-    fio: ""
+    title: ""
   },
   friends: [],
   colleagues: [],
   familiar: [],
-  comments: ""
+  comments: "",
+  gender: getGenderById("empty")
 };
 
 export const AddPersonForm = () => {
@@ -66,33 +71,33 @@ export const AddPersonForm = () => {
     resolver: yupResolver(addUserSchema),
   });
 
-  const [apiPersons, setApiPersons] = useState<TPersonId[]>([]);
+  const [apiPersons, setApiPersons] = useState<TInputItem[]>([]);
 
   const onSubmit: SubmitHandler<TInputs> = (data) =>  {
     const isDuplicate = apiPersons.some(
-      item => item.fio.toLowerCase().trim() === data.fio.toLowerCase().trim()
+      item => item.title.toLowerCase().trim() === data.title.toLowerCase().trim()
     );
 
     if (isDuplicate) {
-      setError("fio", {
+      setError("title", {
         type: "manual",
         message: "Поле дублируется, введите другое значение",
       });
       return;
     }
 
-    const mainPersonId = setPersonId(data.fio);
-    const newPersons: TPersonId[] = [];
+    const mainPersonId = setPersonId(data.title);
+    const newPersons: TInputItem[] = [];
 
-    const personObject = (value: TPersonId) => {
+    const personObject = (value: TInputItem) => {
       if (!value) return { id: "" };
 
       if (value.id) {
         return value;
       }
 
-      if (value.fio) {
-        const item = { ...value, id: setPersonId(value.fio) };
+      if (value.title) {
+        const item = { ...value, id: setPersonId(value.title) };
         newPersons.push(item);
         return item;
       }
@@ -145,29 +150,37 @@ export const AddPersonForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="intro-y box p-5">
         <Controller
-          name="fio"
+          name="title"
           control={control}
           render={({field: {value, onChange}, fieldState: {error}}) => (
-            <TextInputSearch 
-              label="ФИО" 
-              value={value} 
+            <TextInputSearch
+              label="ФИО"
+              value={value}
               onChange={onChange}
               error={error}
               data={apiPersons}
             />
           )}
         />
-        <Controller
-          name="birthday"
-          control={control}
-          render={({field: {value, onChange}}) => (
-            <TextInput label="Дата рождения" value={value} onChange={onChange} className="mt-4"/>
-          )}
-        />
+        <div className="grid grid-cols-12 gap-6">
+          <Controller
+            name="birthday"
+            control={control}
+            render={({field: {value, onChange}}) => (
+              <TextInput
+                label="Дата рождения"
+                value={value}
+                onChange={onChange}
+                className="mt-4 col-span-12 lg:col-span-6"
+              />
+            )}
+          />
+          <GenderInput control={control}/>
+        </div>
         <Controller
           name="wife"
           control={control}
-          render={({field: {value, onChange, }, fieldState: {error}}) => (
+          render={({field: {value, onChange,}, fieldState: {error}}) => (
             <TextInputSelect
               label="Жена"
               value={value}
@@ -210,7 +223,7 @@ export const AddPersonForm = () => {
         <Controller
           name="friends"
           control={control}
-          render={({field: {value, onChange, }, fieldState: {error}}) => (
+          render={({field: {value, onChange,}, fieldState: {error}}) => (
             <TextInputSelect
               label="Друзья"
               value={value}
@@ -225,7 +238,7 @@ export const AddPersonForm = () => {
         <Controller
           name="colleagues"
           control={control}
-          render={({field: {value, onChange, }, fieldState: {error}}) => (
+          render={({field: {value, onChange,}, fieldState: {error}}) => (
             <TextInputSelect
               label="Коллеги"
               value={value}
@@ -240,7 +253,7 @@ export const AddPersonForm = () => {
         <Controller
           name="familiar"
           control={control}
-          render={({field: {value, onChange, }, fieldState: {error}}) => (
+          render={({field: {value, onChange,}, fieldState: {error}}) => (
             <TextInputSelect
               label="Знакомые"
               value={value}

@@ -2,18 +2,18 @@ import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import styles from "./TextInputSearch.module.scss";
 
-export type TPersonId = {
+export type TInputItem = {
   id: string;
-  fio: string;
+  title: string;
 }
 
 type TTextInputSearch = TTextInput & {
-  data: TPersonId[];
+  data: TInputItem[];
   onChange: (value:string) => void;
 }
 
 export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
-  const [filteredData, setFilteredData] = useState<TPersonId[]>([]);
+  const [filteredData, setFilteredData] = useState<TInputItem[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -34,16 +34,16 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
 
   useEffect(() => {
     const filtered = data.filter(item =>
-      item.fio.toLowerCase().includes(searchTerm.toLowerCase())
+      item.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(filtered);
   }, [searchTerm, data]);
 
-  const handleItemClick = (event: MouseEvent, person: TPersonId) => {
+  const handleItemClick = (event: MouseEvent, person: TInputItem) => {
     event.preventDefault();
-    setSearchTerm(person.fio);
+    setSearchTerm(person.title);
     if (props.onChange) {
-      props.onChange(person.fio);
+      props.onChange(person.title);
     }
   };
 
@@ -71,7 +71,7 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
                     className={styles.item}
                     onMouseDown={(event) => handleItemClick(event, person)}
                   >
-                    {person.fio}
+                    {person.title}
                   </div>
                 );
               })}

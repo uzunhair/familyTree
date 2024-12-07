@@ -9,6 +9,7 @@ export type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
   icon?: ReactNode;
   onChange: ChangeEventHandler<HTMLInputElement>;
   value?: string;
+  type?: string;
   error?: any;
 }
 
@@ -19,7 +20,8 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
   onChange,
   children,
   icon, 
-  error, 
+  error,
+  type = "text",
   value: propValue,
   ...props
 }, ref) => {
@@ -51,8 +53,8 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
       <div className={styles.input}>
         <input
           {...props}
+          type={type}
           id={`textField${id}`}
-          type="text"
           placeholder={placeholder}
           ref={ref}
           value={value}

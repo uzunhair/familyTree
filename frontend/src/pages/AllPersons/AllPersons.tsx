@@ -6,7 +6,7 @@ import {GetPersonList} from "../../../wailsjs/go/main/App";
 
 type TPerson = {
   id: string;
-  fio: string;
+  title: string;
   birthday: string;
   father: string;
   mother: string;
@@ -163,7 +163,7 @@ export const AllPersons = () => {
                 </div>
                 <div className="mt-3 text-center lg:ml-2 lg:mr-auto lg:mt-0 lg:text-left">
                   <Link className="font-medium" to={links.editPerson(item.id)}>
-                    {item.fio}
+                    {item.title}
                   </Link>
                   <div className="mt-0.5 text-xs text-slate-500">Дата рождения 27.07.1991</div>
                 </div>

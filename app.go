@@ -14,11 +14,12 @@ type App struct {
 	ctx context.Context
 }
 
-// Person представляет человека в семейном древе
-type Person struct {
+// FullPersonInfo представляет человека в семейном древе
+type FullPersonInfo struct {
 	ID         string   `json:"id"`
-	Fio        string   `json:"fio"`
+	Title      string   `json:"title"`
 	Birthday   string   `json:"birthday"`
+	Gender     string   `json:"gender"`
 	Father     string   `json:"father"`
 	Mother     string   `json:"mother"`
 	Wife       []string `json:"wife"`
@@ -26,6 +27,11 @@ type Person struct {
 	Colleagues []string `json:"colleagues"`
 	Familiar   []string `json:"familiar"`
 	Comments   string   `json:"comments"`
+}
+
+type BasicPersonInfo struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
 }
 
 var personsFilePath = "frontend/src/data/family-users.json"
@@ -47,8 +53,8 @@ func (a *App) Greet(name string) string {
 }
 
 // SaveToJSON сохраняет семейное древо в файл JSON
-func (a *App) SaveToJSON(filename string, people []Person) error {
-	// Marshal the slice of Person structs into JSON
+func (a *App) SaveToJSON(filename string, people []FullPersonInfo) error {
+	// Marshal the slice of FullPersonInfo structs into JSON
 	byteValue, err := json.MarshalIndent(people, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal JSON: %w", err)
@@ -64,15 +70,15 @@ func (a *App) SaveToJSON(filename string, people []Person) error {
 }
 
 // LoadFromJSON загружает семейное древо из файла JSON
-func (a *App) LoadFromJSON() ([]Person, error) {
+func (a *App) LoadFromJSON() ([]FullPersonInfo, error) {
 	// Read the file's content
 	byteValue, err := os.ReadFile(personsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file: %w", err)
 	}
 
-	// Unmarshal the JSON into a slice of Person structs
-	var people []Person
+	// Unmarshal the JSON into a slice of FullPersonInfo structs
+	var people []FullPersonInfo
 	err = json.Unmarshal(byteValue, &people)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal JSON: %w", err)
@@ -86,7 +92,7 @@ func (a *App) LoadFromJSON() ([]Person, error) {
 	return people, nil
 }
 
-func (a *App) SaveUsersToJSONFile(families []Person) []Person {
+func (a *App) SaveUsersToJSONFile(families []FullPersonInfo) []FullPersonInfo {
 	// Создаем экземпляр приложения
 	filename := personsFilePath
 
@@ -98,18 +104,7 @@ func (a *App) SaveUsersToJSONFile(families []Person) []Person {
 
 	// Add new persons to the slice
 	for _, family := range families {
-		newPerson := Person{
-			ID:         family.ID,
-			Fio:        family.Fio,
-			Birthday:   family.Birthday,
-			Wife:       family.Wife,
-			Father:     family.Father,
-			Mother:     family.Mother,
-			Friends:    family.Friends,
-			Colleagues: family.Colleagues,
-			Familiar:   family.Familiar,
-		}
-		people = append(people, newPerson)
+		people = append(people, family)
 	}
 
 	// Save the updated data back to the file
@@ -122,22 +117,17 @@ func (a *App) SaveUsersToJSONFile(families []Person) []Person {
 	return families
 }
 
-type PersonId struct {
-	ID  string `json:"id"`
-	Fio string `json:"fio"`
-}
-
-func (a *App) GetAllPerson() ([]PersonId, error) {
+func (a *App) GetAllPerson() ([]BasicPersonInfo, error) {
 	people, err := a.LoadFromJSON()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load persons: %w", err)
 	}
 
-	var persons []PersonId
+	var persons []BasicPersonInfo
 	for _, person := range people {
-		persons = append(persons, PersonId{
-			ID:  person.ID,
-			Fio: person.Fio,
+		persons = append(persons, BasicPersonInfo{
+			ID:    person.ID,
+			Title: person.Title,
 		})
 	}
 
@@ -145,8 +135,8 @@ func (a *App) GetAllPerson() ([]PersonId, error) {
 }
 
 type SearchResult struct {
-	Persons []Person `json:"persons"`
-	Count   int      `json:"count"`
+	Persons []FullPersonInfo `json:"persons"`
+	Count   int              `json:"count"`
 }
 
 func (a *App) GetPersonList(search string) (SearchResult, error) {
@@ -155,29 +145,19 @@ func (a *App) GetPersonList(search string) (SearchResult, error) {
 		return SearchResult{}, fmt.Errorf("failed to load persons: %w", err)
 	}
 
-	var persons []Person
+	var persons []FullPersonInfo
 	search = strings.ToLower(search)
 	for _, person := range people {
-		if strings.Contains(strings.ToLower(person.Fio), search) ||
+		if strings.Contains(strings.ToLower(person.Title), search) ||
 			strings.Contains(strings.ToLower(person.ID), search) ||
 			strings.Contains(strings.ToLower(person.Birthday), search) {
-			persons = append(persons, Person{
-				ID:         person.ID,
-				Fio:        person.Fio,
-				Birthday:   person.Birthday,
-				Wife:       person.Wife,
-				Father:     person.Father,
-				Mother:     person.Mother,
-				Friends:    person.Friends,
-				Colleagues: person.Colleagues,
-				Familiar:   person.Familiar,
-			})
+			persons = append(persons, person)
 		}
 	}
 
 	if len(persons) == 0 {
 		return SearchResult{
-			Persons: []Person{},
+			Persons: []FullPersonInfo{},
 			Count:   0,
 		}, nil
 	}
@@ -188,34 +168,35 @@ func (a *App) GetPersonList(search string) (SearchResult, error) {
 	}, nil
 }
 
-func (a *App) GetPersonByIdAndFio(id string) (PersonId, error) {
+func (a *App) GetPersonByIdAndTitle(id string) (BasicPersonInfo, error) {
 	people, err := a.LoadFromJSON()
 	if err != nil {
-		return PersonId{}, fmt.Errorf("failed to load persons: %w", err)
+		return BasicPersonInfo{}, fmt.Errorf("failed to load persons: %w", err)
 	}
 
 	for _, person := range people {
 		if person.ID == id {
-			return PersonId{
-				ID:  person.ID,
-				Fio: person.Fio,
+			return BasicPersonInfo{
+				ID:    person.ID,
+				Title: person.Title,
 			}, nil
 		}
 	}
-	return PersonId{}, fmt.Errorf("person with ID %s not found", id)
+	return BasicPersonInfo{}, fmt.Errorf("person with ID %s not found", id)
 }
 
 type PersonWithDetails struct {
-	ID         string     `json:"id"`
-	Fio        string     `json:"fio"`
-	Birthday   string     `json:"birthday"`
-	Father     PersonId   `json:"father"`
-	Mother     PersonId   `json:"mother"`
-	Wife       []PersonId `json:"wife"`
-	Friends    []PersonId `json:"friends"`
-	Colleagues []PersonId `json:"colleagues"`
-	Familiar   []PersonId `json:"familiar"`
-	Comments   string     `json:"comments"`
+	ID         string            `json:"id"`
+	Title      string            `json:"title"`
+	Birthday   string            `json:"birthday"`
+	Gender     string            `json:"gender"`
+	Father     BasicPersonInfo   `json:"father"`
+	Mother     BasicPersonInfo   `json:"mother"`
+	Wife       []BasicPersonInfo `json:"wife"`
+	Friends    []BasicPersonInfo `json:"friends"`
+	Colleagues []BasicPersonInfo `json:"colleagues"`
+	Familiar   []BasicPersonInfo `json:"familiar"`
+	Comments   string            `json:"comments"`
 }
 
 func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
@@ -224,7 +205,7 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		return PersonWithDetails{}, fmt.Errorf("failed to load persons: %w", err)
 	}
 
-	var person Person
+	var person FullPersonInfo
 	for _, p := range people {
 		if p.ID == id {
 			person = p
@@ -237,10 +218,10 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 	}
 
 	// Инициализация массивов как пустых, если они null
-	var wifeObjects []PersonId
+	var wifeObjects []BasicPersonInfo
 	if person.Wife != nil {
 		for _, wifeId := range person.Wife {
-			wife, err := a.GetPersonByIdAndFio(wifeId)
+			wife, err := a.GetPersonByIdAndTitle(wifeId)
 			if err != nil {
 				return PersonWithDetails{}, fmt.Errorf("failed to load wife data: %w", err)
 			}
@@ -248,10 +229,10 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		}
 	}
 
-	var friendObjects []PersonId
+	var friendObjects []BasicPersonInfo
 	if person.Friends != nil {
 		for _, friendId := range person.Friends {
-			friend, err := a.GetPersonByIdAndFio(friendId)
+			friend, err := a.GetPersonByIdAndTitle(friendId)
 			if err != nil {
 				return PersonWithDetails{}, fmt.Errorf("failed to load friend data: %w", err)
 			}
@@ -259,10 +240,10 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		}
 	}
 
-	var colleagueObjects []PersonId
+	var colleagueObjects []BasicPersonInfo
 	if person.Colleagues != nil {
 		for _, colleagueId := range person.Colleagues {
-			colleague, err := a.GetPersonByIdAndFio(colleagueId)
+			colleague, err := a.GetPersonByIdAndTitle(colleagueId)
 			if err != nil {
 				return PersonWithDetails{}, fmt.Errorf("failed to load colleague data: %w", err)
 			}
@@ -270,10 +251,10 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		}
 	}
 
-	var familiarObjects []PersonId
+	var familiarObjects []BasicPersonInfo
 	if person.Familiar != nil {
 		for _, familiarId := range person.Familiar {
-			familiar, err := a.GetPersonByIdAndFio(familiarId)
+			familiar, err := a.GetPersonByIdAndTitle(familiarId)
 			if err != nil {
 				return PersonWithDetails{}, fmt.Errorf("failed to load familiar data: %w", err)
 			}
@@ -281,17 +262,17 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		}
 	}
 
-	var father PersonId
+	var father BasicPersonInfo
 	if person.Father != "" {
-		father, err = a.GetPersonByIdAndFio(person.Father)
+		father, err = a.GetPersonByIdAndTitle(person.Father)
 		if err != nil {
 			return PersonWithDetails{}, fmt.Errorf("failed to load father data: %w", err)
 		}
 	}
 
-	var mother PersonId
+	var mother BasicPersonInfo
 	if person.Mother != "" {
-		mother, err = a.GetPersonByIdAndFio(person.Mother)
+		mother, err = a.GetPersonByIdAndTitle(person.Mother)
 		if err != nil {
 			return PersonWithDetails{}, fmt.Errorf("failed to load mother data: %w", err)
 		}
@@ -300,8 +281,9 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 	// Заполнить поля пользователя
 	personWithDetails := PersonWithDetails{
 		ID:         person.ID,
-		Fio:        person.Fio,
+		Title:      person.Title,
 		Birthday:   person.Birthday,
+		Gender:     person.Gender,
 		Wife:       wifeObjects,
 		Father:     father,
 		Mother:     mother,
@@ -315,7 +297,7 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 }
 
 // UpdatePersonByID обновляет данные пользователя по ID
-func (a *App) UpdatePersonByID(id string, updatedPerson Person, newPersons []Person) (string, error) {
+func (a *App) UpdatePersonByID(id string, updatedPerson FullPersonInfo, newPersons []FullPersonInfo) (string, error) {
 	people, err := a.LoadFromJSON()
 	if err != nil {
 		return updatedPerson.ID, fmt.Errorf("failed to load persons: %w", err)

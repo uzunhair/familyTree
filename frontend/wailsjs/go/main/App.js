@@ -10,8 +10,8 @@ export function GetPersonByID(arg1) {
   return window['go']['main']['App']['GetPersonByID'](arg1);
 }
 
-export function GetPersonByIdAndFio(arg1) {
-  return window['go']['main']['App']['GetPersonByIdAndFio'](arg1);
+export function GetPersonByIdAndTitle(arg1) {
+  return window['go']['main']['App']['GetPersonByIdAndTitle'](arg1);
 }
 
 export function GetPersonList(arg1) {
