@@ -8,7 +8,7 @@ type TTextInputSelect = Omit<TTextInput, "onChange" | "value"> & {
   data: TInputItem[];
   value: TInputItem | TInputItem[];
   inputValue?: string;
-  onChange: (value: TInputItem | TInputItem[]) => void;
+  onChange: (value: TInputItem | TInputItem[] | null) => void;
   multiple?: boolean;
   onlySelect?: boolean;
 };
@@ -32,7 +32,8 @@ export const TextInputSelect = ({
     setInputValue(value);
 
     if(!multiple) {
-      props.onChange({ id: "", title: value });
+      const newValue = value ? { id: "", title: value } : null;
+      props.onChange(newValue);
     }
   };
 
