@@ -6,10 +6,10 @@
     "gender": "male",
     "father": "1733376384970_yzhs",
     "mother": "1733376384970_rkr",
-    "spouse": null,
-    "friends": null,
-    "colleagues": null,
-    "familiar": null,
+    "spouse": [],
+    "friends": [],
+    "colleagues": [],
+    "familiar": [],
     "comments": "Нужно добавить еще такие то данные"
   },
   {
@@ -19,7 +19,7 @@
     "gender": "female",
     "father": "",
     "mother": "",
-    "wife": null,
+    "spouse": null,
     "friends": null,
     "colleagues": null,
     "familiar": null,

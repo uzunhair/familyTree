@@ -4,6 +4,7 @@ import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {useParams} from "react-router-dom";
 import {GenderInput} from "src/pages/EditPerson/GenderInput";
 import {getIds} from "src/pages/EditPerson/lib/helper/getIds";
+import {mergedPersons, TInputMultiple, TMergedPersons} from "src/pages/EditPerson/lib/helper/mergedPersons";
 import {editUserSchema} from "src/pages/EditPerson/lib/schema/editUser";
 import {getGenderById} from "src/shared/lib/helpers/getGender";
 import {User, Users} from "src/shared/ui/Icon";
@@ -15,15 +16,7 @@ import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {LayoutMain} from "src/widgets/template/LayoutMain";
 import {GetAllPerson, GetPersonByID, UpdatePersonByID} from "../../../wailsjs/go/main/App";
 
-type TInputMultiple = {
-  spouse: TInputItem[];
-  friends: TInputItem[];
-  colleagues: TInputItem[];
-  familiar: TInputItem[];
-  children: TInputItem[];
-}
-
-type TInputs = TInputMultiple & {
+export type TInputs = TInputMultiple & {
   id: string;
   title: string;
   birthday: string;
@@ -31,20 +24,6 @@ type TInputs = TInputMultiple & {
   father: TInputItem;
   mother: TInputItem;
   comments: string;
-}
-
-type TUpdate = {
-  id: string;
-  title: string;
-  spouse?: string;
-  father?: string;
-  mother?: string;
-  friends?: string;
-  colleagues?: string;
-  familiar?: string;
-  birthday?: string,
-  gender?: string,
-  comments?: string,
 }
 
 function EditPerson() {
@@ -69,7 +48,7 @@ function EditPerson() {
   const [apiPersons, setApiPersons] = useState<TInputItem[]>([]);
 
   const onSubmit: SubmitHandler<TInputs> = (data) => {
-    const {id, title, birthday, gender, comments, father, mother, spouse, friends, colleagues, familiar, children} = data;
+    const {id, title, birthday, gender, comments, father, mother, spouse, friends, colleagues, familiar} = data;
 
     const mainPerson = {
       id: id,
@@ -85,51 +64,9 @@ function EditPerson() {
       comments: comments,
     };
 
-    const relatedUsers: TUpdate[] = [];
-
-    // Добавляем всех из массивов spouse, friends, colleagues, familiar
-    const addRelatedUsers = (users: TInputItem[], key: keyof TInputMultiple) => {
-      const firstArray: TInputItem[] = (formState.defaultValues?.[key] || []).filter((item): item is TInputItem => item !== undefined);
-      const secondArray= users || [];
-      
-      const toDelete: TUpdate[] = firstArray.filter((item1: TInputItem) =>
-        !secondArray.some(item2 => item2.id === item1.id)
-      ).map((item: TInputItem) => ({ ...item, [key]: "delete" }));
-      
-      const toAdd: TUpdate[] = secondArray.filter((item2: TInputItem) =>
-        !firstArray.some((item1: TInputItem) => item1.id === item2.id)
-      ).map(item => ({ ...item, [key]: "add" }));
-      
-      const result = [...toDelete, ...toAdd];
-      
-      result.forEach(user => {
-        relatedUsers.push(user);
-      });
-    };
-
-    addRelatedUsers(spouse, "spouse");
-    addRelatedUsers(friends, "friends");
-    addRelatedUsers(colleagues, "colleagues");
-    addRelatedUsers(familiar, "familiar");
-
-    if(children) {
-      const parent = gender.id === "male" ? "father" : "mother";
-      children.forEach(user => {
-        relatedUsers.push({ ...user, [parent]: "add" });
-      });
-    }
+    const mergedPersonsResult = mergedPersons({data, defaultValues: formState.defaultValues} as TMergedPersons);
     
-    const mergedPersons = relatedUsers.reduce((acc: TUpdate[], person) => {
-      const existingPerson = acc.find(p => p.id === person.id);
-      if (existingPerson) {
-        Object.assign(existingPerson, person);
-      } else {
-        acc.push({ ...person });
-      }
-      return acc;
-    }, []);
-    
-    UpdatePersonByID(mainPerson, mergedPersons)
+    UpdatePersonByID(mainPerson, mergedPersonsResult)
       .then((item) => {
         reset(data);
         // eslint-disable-next-line no-console
