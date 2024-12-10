@@ -1,1 +1,0 @@
-export { AddPersonForm} from "./AddPersonForm";

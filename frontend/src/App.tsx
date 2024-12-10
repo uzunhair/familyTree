@@ -1,6 +1,5 @@
 import {useState} from "react";
 import {Breadcrumb} from "src/shared/ui/Breadcrumb";
-import {AddPersonForm} from "./pages/AddPerson/AddPersonForm";
 import {Greet} from "../wailsjs/go/main/App";
 
 function App() {
@@ -707,7 +706,6 @@ function App() {
               </div>
               <div className="mt-5 grid grid-cols-12 gap-6">
                 <div className="intro-y col-span-12 lg:col-span-6">
-                  <AddPersonForm />
                 </div>
               </div>
             </div>

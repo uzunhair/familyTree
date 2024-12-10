@@ -28,6 +28,7 @@ export type TInputs = TInputMultiple & {
 
 function EditPerson() {
   const {id = "0"} = useParams();
+  const [apiPersons, setApiPersons] = useState<TInputItem[]>([]);
 
   const {
     handleSubmit,
@@ -45,11 +46,8 @@ function EditPerson() {
     resolver: yupResolver(editUserSchema),
   });
 
-  const [apiPersons, setApiPersons] = useState<TInputItem[]>([]);
-
   const onSubmit: SubmitHandler<TInputs> = (data) => {
     const {id, title, birthday, gender, comments, father, mother, spouse, friends, colleagues, familiar} = data;
-
     const mainPerson = {
       id: id,
       title: title,
@@ -66,7 +64,7 @@ function EditPerson() {
 
     const mergedPersonsResult = mergedPersons({data, defaultValues: formState.defaultValues} as TMergedPersons);
     
-    UpdatePersonByID(mainPerson, mergedPersonsResult)
+    UpdatePersonByID(mainPerson, mergedPersonsResult, "update")
       .then((item) => {
         reset(data);
         // eslint-disable-next-line no-console

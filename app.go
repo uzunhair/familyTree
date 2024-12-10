@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 )
@@ -84,37 +83,7 @@ func (a *App) LoadFromJSON() ([]FullPersonInfo, error) {
 		return nil, fmt.Errorf("failed to unmarshal JSON: %w", err)
 	}
 
-	//for _, person := range people {
-	//	fmt.Printf("Person: %s", person)
-	//	fmt.Println()
-	//}
-
 	return people, nil
-}
-
-func (a *App) SaveUsersToJSONFile(families []FullPersonInfo) []FullPersonInfo {
-	// Создаем экземпляр приложения
-	filename := personsFilePath
-
-	// Load existing data from the file
-	people, err := a.LoadFromJSON()
-	if err != nil {
-		log.Fatalf("failed to load data: %s", err)
-	}
-
-	// Add new persons to the slice
-	for _, family := range families {
-		people = append(people, family)
-	}
-
-	// Save the updated data back to the file
-	err = a.SaveToJSON(filename, people)
-	if err != nil {
-		log.Fatalf("failed to save data: %s", err)
-	}
-
-	fmt.Println("Добавлены новые пользователи")
-	return families
 }
 
 func (a *App) GetAllPerson() ([]BasicPersonInfo, error) {
@@ -372,19 +341,38 @@ func getStringValue(s *string) string {
 	return ""
 }
 
+type Action string
+
+const (
+	ActionAdd    Action = "add"
+	ActionUpdate Action = "update"
+)
+
 // UpdatePersonByID обновляет данные пользователя по ID
-func (a *App) UpdatePersonByID(updatedPerson FullPersonInfo, newPersons []FullPersonInfoActions) (string, error) {
+func (a *App) UpdatePersonByID(updatedPerson FullPersonInfo, newPersons []FullPersonInfoActions, action Action) (string, error) {
 	people, err := a.LoadFromJSON()
 	if err != nil {
 		return updatedPerson.ID, fmt.Errorf("failed to load persons: %w", err)
 	}
 
 	var found bool
-	for i, person := range people {
-		if person.ID == updatedPerson.ID {
-			people[i] = updatedPerson
-			found = true
+	switch action {
+	case ActionAdd:
+		people = append(people, updatedPerson)
+		found = true
+		fmt.Printf("Updating person %s", updatedPerson.ID)
+
+	case ActionUpdate:
+		for i, person := range people {
+			if person.ID == updatedPerson.ID {
+				people[i] = updatedPerson
+				found = true
+			}
 		}
+		fmt.Printf("Adding person %s", updatedPerson.ID)
+
+	default:
+		return updatedPerson.ID, fmt.Errorf("person with ID %s not found", updatedPerson.ID)
 	}
 
 	// Добавляем новых пользователей
