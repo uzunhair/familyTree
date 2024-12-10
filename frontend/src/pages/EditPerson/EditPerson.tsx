@@ -3,9 +3,9 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {useParams} from "react-router-dom";
 import {GenderInput} from "src/pages/EditPerson/GenderInput";
+import {getIds} from "src/pages/EditPerson/lib/helper/getIds";
 import {editUserSchema} from "src/pages/EditPerson/lib/schema/editUser";
-import {GENDER, getGenderById} from "src/shared/lib/helpers/getGender";
-import {setPersonId} from "src/shared/lib/helpers/setPersonId";
+import {getGenderById} from "src/shared/lib/helpers/getGender";
 import {User, Users} from "src/shared/ui/Icon";
 import {Textarea} from "src/shared/ui/Textarea";
 import {TextInput} from "src/shared/ui/TextInput";
@@ -15,35 +15,37 @@ import {TextInputSelect} from "src/shared/ui/TextInputSelect";
 import {LayoutMain} from "src/widgets/template/LayoutMain";
 import {GetAllPerson, GetPersonByID, UpdatePersonByID} from "../../../wailsjs/go/main/App";
 
-type TInputs = {
+type TInputMultiple = {
+  spouse: TInputItem[];
+  friends: TInputItem[];
+  colleagues: TInputItem[];
+  familiar: TInputItem[];
+  children: TInputItem[];
+}
+
+type TInputs = TInputMultiple & {
   id: string;
   title: string;
   birthday: string;
   gender: TInputItem;
   father: TInputItem;
   mother: TInputItem;
-  wife: TInputItem[];
-  friends: TInputItem[];
-  colleagues: TInputItem[];
-  familiar: TInputItem[];
   comments: string;
 }
 
-type TInputsOut = {
+type TUpdate = {
   id: string;
   title: string;
-  birthday: string;
-  gender: string;
-  father: string;
-  mother: string;
-  wife: string[];
-  friends: string[];
-  colleagues: string[];
-  familiar: string[];
-  comments: string;
+  spouse?: string;
+  father?: string;
+  mother?: string;
+  friends?: string;
+  colleagues?: string;
+  familiar?: string;
+  birthday?: string,
+  gender?: string,
+  comments?: string,
 }
-
-type TInputsKeys = keyof TInputs;
 
 function EditPerson() {
   const {id = "0"} = useParams();
@@ -51,64 +53,92 @@ function EditPerson() {
   const {
     handleSubmit,
     control,
+    reset,
+    formState,
   } = useForm<TInputs>({
     defaultValues: async () => GetPersonByID(id)
-      .then((item) => {
-        return ({
-          ...item, gender: getGenderById(item.gender)
-        });
-      }),
+      .then((item) => ({
+        ...item,
+        gender: getGenderById(item.gender),
+        children: []
+      }
+      )),
     resolver: yupResolver(editUserSchema),
   });
 
   const [apiPersons, setApiPersons] = useState<TInputItem[]>([]);
 
   const onSubmit: SubmitHandler<TInputs> = (data) => {
-    const newPersons: TInputsOut[] = [];
+    const {id, title, birthday, gender, comments, father, mother, spouse, friends, colleagues, familiar, children} = data;
 
-    const personObject = (value: TInputItem) => {
-      if (!value) return {id: ""};
-
-      if (value.id) {
-        return value;
-      }
-
-      if (value.title && value.id !== "empty") {
-        const item = {...value, id: setPersonId(value.title)};
-        newPersons.push(item as TInputsOut);
-        return item;
-      }
-
-      return {id: ""};
+    const mainPerson = {
+      id: id,
+      title: title,
+      birthday: birthday,
+      gender: gender.id,
+      father: father.id,
+      mother: mother.id,
+      spouse: getIds(spouse),
+      friends: getIds(friends),
+      colleagues: getIds(colleagues),
+      familiar: getIds(familiar),
+      comments: comments,
     };
 
-    const personAddConst = Object.keys(data).reduce((acc, key) => {
-      const typedKey = key as TInputsKeys;
-      const value = data[typedKey];
+    const relatedUsers: TUpdate[] = [];
 
-      if (typeof value === "string" && value) {
-        acc[typedKey] = value;
-      } else if (Array.isArray(value)) {
-        acc[typedKey] = value.map(item => personObject(item).id);
-      } else if (typeof value === "object" && value !== null) {
-        acc[typedKey] = personObject(value).id;
+    // Добавляем всех из массивов spouse, friends, colleagues, familiar
+    const addRelatedUsers = (users: TInputItem[], key: keyof TInputMultiple) => {
+      const firstArray: TInputItem[] = (formState.defaultValues?.[key] || []).filter((item): item is TInputItem => item !== undefined);
+      const secondArray= users || [];
+      
+      const toDelete: TUpdate[] = firstArray.filter((item1: TInputItem) =>
+        !secondArray.some(item2 => item2.id === item1.id)
+      ).map((item: TInputItem) => ({ ...item, [key]: "delete" }));
+      
+      const toAdd: TUpdate[] = secondArray.filter((item2: TInputItem) =>
+        !firstArray.some((item1: TInputItem) => item1.id === item2.id)
+      ).map(item => ({ ...item, [key]: "add" }));
+      
+      const result = [...toDelete, ...toAdd];
+      
+      result.forEach(user => {
+        relatedUsers.push(user);
+      });
+    };
+
+    addRelatedUsers(spouse, "spouse");
+    addRelatedUsers(friends, "friends");
+    addRelatedUsers(colleagues, "colleagues");
+    addRelatedUsers(familiar, "familiar");
+
+    if(children) {
+      const parent = gender.id === "male" ? "father" : "mother";
+      children.forEach(user => {
+        relatedUsers.push({ ...user, [parent]: "add" });
+      });
+    }
+    
+    const mergedPersons = relatedUsers.reduce((acc: TUpdate[], person) => {
+      const existingPerson = acc.find(p => p.id === person.id);
+      if (existingPerson) {
+        Object.assign(existingPerson, person);
+      } else {
+        acc.push({ ...person });
       }
-
       return acc;
-    }, {} as Record<TInputsKeys, string | string[]>);
-
-    const updatePerson = {
-      ...personAddConst,
-      id: data.id,
-    } as TInputsOut;
-
-    UpdatePersonByID(data.id, updatePerson, newPersons)
-      // eslint-disable-next-line no-console
-      .then((item) => console.log(
-        "%c Update person %c " + item + " ",
-        "background: #aa0000; color: #fff; border-radius: 3px 0px 0px 3px; padding: 1px; font-size: 0.7rem",
-        "background: #009900; color: #fff; border-radius: 0px 3px 3px 0px; padding: 1px; font-size: 0.7rem"
-      ))
+    }, []);
+    
+    UpdatePersonByID(mainPerson, mergedPersons)
+      .then((item) => {
+        reset(data);
+        // eslint-disable-next-line no-console
+        console.log(
+          "%c Update person %c " + item + " ",
+          "background: #aa0000; color: #fff; border-radius: 3px 0px 0px 3px; padding: 1px; font-size: 0.7rem",
+          "background: #009900; color: #fff; border-radius: 0px 3px 3px 0px; padding: 1px; font-size: 0.7rem"
+        );
+      })
       // eslint-disable-next-line no-console
       .catch((errors) => console.log("Errors: Update person", errors));
   };
@@ -152,11 +182,11 @@ function EditPerson() {
             <GenderInput control={control} />
           </div>
           <Controller
-            name="wife"
+            name="spouse"
             control={control}
             render={({field: {value, onChange,}, fieldState: {error}}) => (
               <TextInputSelect
-                label="Жена"
+                label="Муж/Жена"
                 value={value || []}
                 onChange={onChange}
                 error={error}
@@ -196,6 +226,21 @@ function EditPerson() {
                 data={apiPersons}
                 icon={<User />}
                 className="mt-4"
+              />
+            )}
+          />
+          <Controller
+            name="children"
+            control={control}
+            render={({field: {value, onChange,}, fieldState: {error}}) => (
+              <TextInputSelect
+                label="Дети"
+                value={value}
+                onChange={onChange}
+                error={error}
+                data={apiPersons}
+                className="mt-4"
+                multiple
               />
             )}
           />

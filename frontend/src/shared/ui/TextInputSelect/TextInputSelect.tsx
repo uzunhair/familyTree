@@ -1,5 +1,6 @@
 import React, { ChangeEvent, MouseEvent, KeyboardEvent, useEffect, useState } from "react";
 import {getDeclensionOfMatches} from "src/shared/lib/helpers/getDeclensionOfMatches";
+import {setPersonId} from "src/shared/lib/helpers/setPersonId";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import { TInputItem } from "src/shared/ui/TextInputSearch/TextInputSearch";
 import styles from "../TextInputSearch/TextInputSearch.module.scss";
@@ -26,13 +27,14 @@ export const TextInputSelect = ({
   const [isFocused, setIsFocused] = useState(false);
   const [selectedFromData, setSelectedFromData] = useState<TInputItem[]>([]);
   const multiple = multipleProp && Array.isArray(value);
+  const id = setPersonId(inputValue);
   
   const handleChangeInput  = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.trim();
     setInputValue(value);
 
     if(!multiple) {
-      const newValue = value ? { id: "", title: value } : null;
+      const newValue = value ? { id, title: value } : null;
       props.onChange(newValue);
     }
   };
@@ -44,7 +46,7 @@ export const TextInputSelect = ({
       if(multiple) {
         const findItem = data.find(item => item.title === inputValue);
         const isUnique = value.some(item => item.title === inputValue);
-        const outValue = findItem || {id: "", title: inputValue};
+        const outValue = findItem || {id, title: inputValue};
         if (!isUnique && outValue.title) {
           props.onChange([...value, outValue]);
           setInputValue("");

@@ -10,7 +10,7 @@ type TPerson = {
   birthday: string;
   father: string;
   mother: string;
-  wife: string[];
+  spouse: string[];
   friends: string[];
   colleagues: string[];
   familiar: string[];
@@ -44,10 +44,10 @@ export const AllPersons = () => {
   }, [search]);
 
   const progressCalc = (person: TPerson) => {
-    const { wife, father, mother, birthday } = person;
+    const { spouse, father, mother, birthday } = person;
     const totalFields = 4;
 
-    const count = Number(!!wife && wife.length > 0) +
+    const count = Number(!!spouse && spouse.length > 0) +
       Number(!!father) +
       Number(!!mother) +
       Number(!!birthday);

@@ -21,7 +21,7 @@ export namespace main {
 	    gender: string;
 	    father: string;
 	    mother: string;
-	    wife: string[];
+	    spouse: string[];
 	    friends: string[];
 	    colleagues: string[];
 	    familiar: string[];
@@ -39,7 +39,39 @@ export namespace main {
 	        this.gender = source["gender"];
 	        this.father = source["father"];
 	        this.mother = source["mother"];
-	        this.wife = source["wife"];
+	        this.spouse = source["spouse"];
+	        this.friends = source["friends"];
+	        this.colleagues = source["colleagues"];
+	        this.familiar = source["familiar"];
+	        this.comments = source["comments"];
+	    }
+	}
+	export class FullPersonInfoActions {
+	    id: string;
+	    title: string;
+	    birthday?: string;
+	    gender?: string;
+	    father?: string;
+	    mother?: string;
+	    spouse?: string;
+	    friends?: string;
+	    colleagues?: string;
+	    familiar?: string;
+	    comments?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new FullPersonInfoActions(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.title = source["title"];
+	        this.birthday = source["birthday"];
+	        this.gender = source["gender"];
+	        this.father = source["father"];
+	        this.mother = source["mother"];
+	        this.spouse = source["spouse"];
 	        this.friends = source["friends"];
 	        this.colleagues = source["colleagues"];
 	        this.familiar = source["familiar"];
@@ -53,7 +85,7 @@ export namespace main {
 	    gender: string;
 	    father: BasicPersonInfo;
 	    mother: BasicPersonInfo;
-	    wife: BasicPersonInfo[];
+	    spouse: BasicPersonInfo[];
 	    friends: BasicPersonInfo[];
 	    colleagues: BasicPersonInfo[];
 	    familiar: BasicPersonInfo[];
@@ -71,7 +103,7 @@ export namespace main {
 	        this.gender = source["gender"];
 	        this.father = this.convertValues(source["father"], BasicPersonInfo);
 	        this.mother = this.convertValues(source["mother"], BasicPersonInfo);
-	        this.wife = this.convertValues(source["wife"], BasicPersonInfo);
+	        this.spouse = this.convertValues(source["spouse"], BasicPersonInfo);
 	        this.friends = this.convertValues(source["friends"], BasicPersonInfo);
 	        this.colleagues = this.convertValues(source["colleagues"], BasicPersonInfo);
 	        this.familiar = this.convertValues(source["familiar"], BasicPersonInfo);

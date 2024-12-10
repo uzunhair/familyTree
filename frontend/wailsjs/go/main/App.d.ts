@@ -18,4 +18,4 @@ export function SaveToJSON(arg1:string,arg2:Array<main.FullPersonInfo>):Promise<
 
 export function SaveUsersToJSONFile(arg1:Array<main.FullPersonInfo>):Promise<Array<main.FullPersonInfo>>;
 
-export function UpdatePersonByID(arg1:string,arg2:main.FullPersonInfo,arg3:Array<main.FullPersonInfo>):Promise<string>;
+export function UpdatePersonByID(arg1:main.FullPersonInfo,arg2:Array<main.FullPersonInfoActions>):Promise<string>;

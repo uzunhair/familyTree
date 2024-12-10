@@ -34,6 +34,6 @@ export function SaveUsersToJSONFile(arg1) {
   return window['go']['main']['App']['SaveUsersToJSONFile'](arg1);
 }
 
-export function UpdatePersonByID(arg1, arg2, arg3) {
-  return window['go']['main']['App']['UpdatePersonByID'](arg1, arg2, arg3);
+export function UpdatePersonByID(arg1, arg2) {
+  return window['go']['main']['App']['UpdatePersonByID'](arg1, arg2);
 }

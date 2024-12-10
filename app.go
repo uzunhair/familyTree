@@ -22,7 +22,7 @@ type FullPersonInfo struct {
 	Gender     string   `json:"gender"`
 	Father     string   `json:"father"`
 	Mother     string   `json:"mother"`
-	Wife       []string `json:"wife"`
+	Spouse     []string `json:"spouse"`
 	Friends    []string `json:"friends"`
 	Colleagues []string `json:"colleagues"`
 	Familiar   []string `json:"familiar"`
@@ -145,12 +145,18 @@ func (a *App) GetPersonList(search string) (SearchResult, error) {
 		return SearchResult{}, fmt.Errorf("failed to load persons: %w", err)
 	}
 
+	if people == nil {
+		return SearchResult{}, fmt.Errorf("loaded persons is nil")
+	}
+
 	var persons []FullPersonInfo
 	search = strings.ToLower(search)
 	for _, person := range people {
-		if strings.Contains(strings.ToLower(person.Title), search) ||
-			strings.Contains(strings.ToLower(person.ID), search) ||
-			strings.Contains(strings.ToLower(person.Birthday), search) {
+		var title = strings.Contains(strings.ToLower(person.Title), search)
+		var ID = strings.Contains(strings.ToLower(person.ID), search)
+		var birthday = strings.Contains(strings.ToLower(person.Birthday), search)
+		fmt.Printf("--- %b --search %s title--%s id--%s birthday--%s \n", title, search, person.Title, person.ID, person.Birthday)
+		if title || ID || birthday {
 			persons = append(persons, person)
 		}
 	}
@@ -192,7 +198,7 @@ type PersonWithDetails struct {
 	Gender     string            `json:"gender"`
 	Father     BasicPersonInfo   `json:"father"`
 	Mother     BasicPersonInfo   `json:"mother"`
-	Wife       []BasicPersonInfo `json:"wife"`
+	Spouse     []BasicPersonInfo `json:"spouse"`
 	Friends    []BasicPersonInfo `json:"friends"`
 	Colleagues []BasicPersonInfo `json:"colleagues"`
 	Familiar   []BasicPersonInfo `json:"familiar"`
@@ -218,14 +224,14 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 	}
 
 	// Инициализация массивов как пустых, если они null
-	var wifeObjects []BasicPersonInfo
-	if person.Wife != nil {
-		for _, wifeId := range person.Wife {
-			wife, err := a.GetPersonByIdAndTitle(wifeId)
+	var spouseObjects []BasicPersonInfo
+	if person.Spouse != nil {
+		for _, spouseId := range person.Spouse {
+			spouse, err := a.GetPersonByIdAndTitle(spouseId)
 			if err != nil {
-				return PersonWithDetails{}, fmt.Errorf("failed to load wife data: %w", err)
+				return PersonWithDetails{}, fmt.Errorf("failed to load spouse data: %w", err)
 			}
-			wifeObjects = append(wifeObjects, wife)
+			spouseObjects = append(spouseObjects, spouse)
 		}
 	}
 
@@ -284,7 +290,7 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		Title:      person.Title,
 		Birthday:   person.Birthday,
 		Gender:     person.Gender,
-		Wife:       wifeObjects,
+		Spouse:     spouseObjects,
 		Father:     father,
 		Mother:     mother,
 		Friends:    friendObjects,
@@ -296,8 +302,78 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 	return personWithDetails, nil
 }
 
+type FullPersonInfoActions struct {
+	ID         string  `json:"id"`
+	Title      string  `json:"title"`
+	Birthday   *string `json:"birthday"`
+	Gender     *string `json:"gender"`
+	Father     *string `json:"father"`
+	Mother     *string `json:"mother"`
+	Spouse     *string `json:"spouse"`
+	Friends    *string `json:"friends"`
+	Colleagues *string `json:"colleagues"`
+	Familiar   *string `json:"familiar"`
+	Comments   *string `json:"comments"`
+}
+
+// Получение значения для строкового значения
+func getUpdatePersonKeyString(item string, action string, id string) string {
+	add := "add"
+	remove := "delete"
+
+	if action == remove {
+		if item == id {
+			return ""
+		}
+	}
+
+	if action == add {
+		return id
+	}
+
+	return item
+}
+
+func getUpdatePersonKeyArray(items []string, action string, id string) []string {
+	add := "add"
+	remove := "delete"
+
+	if action == remove {
+		var result []string
+		for _, item := range items {
+			fmt.Printf("350 if: %s - %s \n", item, id)
+			if item != id {
+				result = append(result, item)
+			}
+		}
+		fmt.Printf("result: %s \n", result)
+		return result
+	}
+
+	found := false
+	for _, item := range items {
+		if item == id {
+			found = true
+			break
+		}
+	}
+
+	if !found && add == action {
+		items = append(items, id)
+	}
+
+	return items
+}
+
+func getStringValue(s *string) string {
+	if s != nil {
+		return *s
+	}
+	return ""
+}
+
 // UpdatePersonByID обновляет данные пользователя по ID
-func (a *App) UpdatePersonByID(id string, updatedPerson FullPersonInfo, newPersons []FullPersonInfo) (string, error) {
+func (a *App) UpdatePersonByID(updatedPerson FullPersonInfo, newPersons []FullPersonInfoActions) (string, error) {
 	people, err := a.LoadFromJSON()
 	if err != nil {
 		return updatedPerson.ID, fmt.Errorf("failed to load persons: %w", err)
@@ -305,19 +381,52 @@ func (a *App) UpdatePersonByID(id string, updatedPerson FullPersonInfo, newPerso
 
 	var found bool
 	for i, person := range people {
-		if person.ID == id {
+		if person.ID == updatedPerson.ID {
 			people[i] = updatedPerson
 			found = true
-			break
+		}
+	}
+
+	// Добавляем новых пользователей
+	for _, newPerson := range newPersons {
+		var foundNew bool
+		for i, person := range people {
+			if person.ID == newPerson.ID {
+				people[i] = FullPersonInfo{
+					ID:         person.ID,
+					Title:      person.Title,
+					Birthday:   person.Birthday,
+					Gender:     person.Gender,
+					Father:     getUpdatePersonKeyString(person.Father, getStringValue(newPerson.Father), updatedPerson.ID),
+					Mother:     getUpdatePersonKeyString(person.Mother, getStringValue(newPerson.Mother), updatedPerson.ID),
+					Spouse:     getUpdatePersonKeyArray(person.Spouse, getStringValue(newPerson.Spouse), updatedPerson.ID),
+					Friends:    getUpdatePersonKeyArray(person.Friends, getStringValue(newPerson.Friends), updatedPerson.ID),
+					Colleagues: getUpdatePersonKeyArray(person.Colleagues, getStringValue(newPerson.Colleagues), updatedPerson.ID),
+					Familiar:   getUpdatePersonKeyArray(person.Familiar, getStringValue(newPerson.Familiar), updatedPerson.ID),
+				}
+				foundNew = true
+				break
+			}
+		}
+		if !foundNew {
+			people = append(people, FullPersonInfo{
+				ID:         newPerson.ID,
+				Title:      newPerson.Title,
+				Birthday:   getStringValue(newPerson.Birthday),
+				Gender:     getStringValue(newPerson.Gender),
+				Father:     getUpdatePersonKeyString("", getStringValue(newPerson.Father), updatedPerson.ID),
+				Mother:     getUpdatePersonKeyString("", getStringValue(newPerson.Mother), updatedPerson.ID),
+				Spouse:     getUpdatePersonKeyArray(nil, getStringValue(newPerson.Spouse), updatedPerson.ID),
+				Friends:    getUpdatePersonKeyArray(nil, getStringValue(newPerson.Friends), updatedPerson.ID),
+				Colleagues: getUpdatePersonKeyArray(nil, getStringValue(newPerson.Colleagues), updatedPerson.ID),
+				Familiar:   getUpdatePersonKeyArray(nil, getStringValue(newPerson.Familiar), updatedPerson.ID),
+			})
 		}
 	}
 
 	if !found {
-		return updatedPerson.ID, fmt.Errorf("person with ID %s not found", id)
+		return updatedPerson.ID, fmt.Errorf("person with ID %s not found", updatedPerson.ID)
 	}
-
-	// Добавляем новых пользователей
-	people = append(people, newPersons...)
 
 	// Сохраняем обновленные данные обратно в JSON файл
 	err = a.SaveToJSON(personsFilePath, people)
