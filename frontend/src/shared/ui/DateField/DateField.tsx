@@ -1,6 +1,6 @@
-import React, {useEffect, useId, useRef, useState} from "react";
-import {MonthSelect} from "src/shared/ui/DateField/MonthSelect";
-import {YearSelect} from "src/shared/ui/DateField/YearSelect";
+import React, { useEffect, useId, useRef, useState, useMemo } from "react";
+import { MonthSelect } from "src/shared/ui/DateField/MonthSelect";
+import { YearSelect } from "src/shared/ui/DateField/YearSelect";
 import styles from "./DateField.module.scss";
 
 type TProps = {
@@ -21,15 +21,9 @@ export const DateField = ({ label, value, onChange }: TProps) => {
       const [year, month, day] = value.split("-");
       return { year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) };
     }
-    return { year, month, day: day };
+    return { year, month, day };
   });
 
-  const [inputValue, setInputValue] = useState(() => {
-    if (value) {
-      return value;
-    }
-    return `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-  });
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
 
@@ -37,19 +31,12 @@ export const DateField = ({ label, value, onChange }: TProps) => {
     if (value) {
       const [year, month, day] = value.split("-");
       setSelectedDate({ year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
-      setInputValue(value);
     }
   }, [value]);
-
-  useEffect(() => {
-
-  }, [selectedDate]);
 
   const handleInputChange = (event: any) => {
     const newDate = event.target.value;
     const [year, month, day] = newDate.split("-");
-
-    setInputValue(newDate);
 
     if (year) {
       setSelectedDate({ year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
@@ -64,12 +51,12 @@ export const DateField = ({ label, value, onChange }: TProps) => {
     return createDate.getDate();
   };
 
-  const days = numberDaysInMonth(selectedDate.year, selectedDate.month);
-  const skip = new Date(selectedDate.year, selectedDate.month, 1).getDay();
+  const days = useMemo(() => numberDaysInMonth(selectedDate.year, selectedDate.month), [selectedDate.year, selectedDate.month]);
+  const skip = useMemo(() => new Date(selectedDate.year, selectedDate.month, 1).getDay(), [selectedDate.year, selectedDate.month]);
 
   const weekName = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
   const weekNumber = [6, 0, 1, 2, 3, 4, 5];
-  const daysOfWeek = Array.from({ length: weekNumber[skip] }, (_, i) => i + 1);
+  const daysOfWeek = useMemo(() => Array.from({ length: weekNumber[skip] }, (_, i) => i + 1), [skip]);
 
   const handleMonthChange = (month: number) => {
     setSelectedDate((prevState) => ({ ...prevState, month }));
@@ -82,7 +69,6 @@ export const DateField = ({ label, value, onChange }: TProps) => {
   const handleDayChange = (day: number) => {
     setSelectedDate((prevState) => ({ ...prevState, day }));
     const dateString = `${selectedDate.year}-${(selectedDate.month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
-    setInputValue(dateString);
     setIsCalendarVisible(false);
 
     if (onChange) {
@@ -114,25 +100,28 @@ export const DateField = ({ label, value, onChange }: TProps) => {
     setSelectedDate((prevState) => ({ ...prevState, year: newYear, month: newMonth }));
   };
 
-  const list = [];
-  for (let i = 1; i <= days; i++) {
-    list.push(
-      <div
-        key={i}
-        onClick={() => handleDayChange(i)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            handleDayChange(i);
-          }
-        }}
-        className={styles.day}
-        role="button"
-        tabIndex={0}
-      >
-        {i}
-      </div>
-    );
-  }
+  const list = useMemo(() => {
+    const daysList = [];
+    for (let i = 1; i <= days; i++) {
+      daysList.push(
+        <div
+          key={i}
+          onClick={() => handleDayChange(i)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              handleDayChange(i);
+            }
+          }}
+          className={styles.day}
+          role="button"
+          tabIndex={0}
+        >
+          {i}
+        </div>
+      );
+    }
+    return daysList;
+  }, [days, handleDayChange]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
@@ -151,6 +140,8 @@ export const DateField = ({ label, value, onChange }: TProps) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isCalendarVisible]);
+
+  const inputValue = `${selectedDate.year}-${(selectedDate.month + 1).toString().padStart(2, "0")}-${selectedDate.day.toString().padStart(2, "0")}`;
 
   return (
     <div className={styles.layout}>
