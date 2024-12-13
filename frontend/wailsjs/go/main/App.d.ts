@@ -16,6 +16,4 @@ export function LoadFromJSON():Promise<Array<main.FullPersonInfo>>;
 
 export function SaveToJSON(arg1:string,arg2:Array<main.FullPersonInfo>):Promise<void>;
 
-export function SaveUsersToJSONFile(arg1:Array<main.FullPersonInfo>):Promise<Array<main.FullPersonInfo>>;
-
 export function UpdatePersonByID(arg1:main.FullPersonInfo,arg2:Array<main.FullPersonInfoActions>,arg3:main.Action):Promise<string>;
