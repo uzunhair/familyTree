@@ -15,20 +15,20 @@
   {
     "id": "1733376384970_yir",
     "title": "Зайнулабидова Наида Мурадовна",
-    "birthday": "23.03.1994",
+    "birthday": "1994-02-23",
     "gender": "female",
     "father": "",
     "mother": "",
-    "spouse": null,
-    "friends": null,
-    "colleagues": null,
-    "familiar": null,
+    "spouse": [],
+    "friends": [],
+    "colleagues": [],
+    "familiar": [],
     "comments": ""
   },
   {
     "id": "1733376384970_yzhs",
     "title": "Зайнулабидов Ражабдибир Расулулаевич",
-    "birthday": "120",
+    "birthday": "",
     "gender": "",
     "father": "",
     "mother": "",
@@ -54,7 +54,7 @@
   {
     "id": "1733376803894_ygzh",
     "title": "Зайнулабидов Магомед Ражабдибирович",
-    "birthday": "24.12.1994",
+    "birthday": "",
     "gender": "",
     "father": "1733376384970_yzhs",
     "mother": "1733376384970_rkr",
@@ -67,7 +67,7 @@
   {
     "id": "1733376979811_yru",
     "title": "Зайнулабидова Каримат Узунхайировна",
-    "birthday": "17.11.2017",
+    "birthday": "",
     "gender": "",
     "father": "1733376384970_yuzh",
     "mother": "1733376384970_yir",
@@ -80,7 +80,7 @@
   {
     "id": "1733377018523_yszh",
     "title": "Зайнулабидов Расулула Ражабдибирович",
-    "birthday": "24.12.1994",
+    "birthday": "",
     "gender": "",
     "father": "1733376384970_yzhs",
     "mother": "1733376384970_rkr",

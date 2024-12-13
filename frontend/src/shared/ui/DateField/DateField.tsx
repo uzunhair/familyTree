@@ -1,6 +1,6 @@
-import React, { useEffect, useId, useRef, useState, useMemo } from "react";
-import { MonthSelect } from "src/shared/ui/DateField/MonthSelect";
-import { YearSelect } from "src/shared/ui/DateField/YearSelect";
+import React, {useEffect, useId, useMemo, useRef, useState} from "react";
+import {MonthSelect} from "src/shared/ui/DateField/MonthSelect";
+import {YearSelect} from "src/shared/ui/DateField/YearSelect";
 import styles from "./DateField.module.scss";
 
 type TProps = {
@@ -24,6 +24,12 @@ export const DateField = ({ label, value, onChange }: TProps) => {
     return { year, month, day };
   });
 
+  const [inputValue, setInputValue] = useState(() => {
+    if (value) {
+      return value;
+    }
+    return "";
+  });
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +37,7 @@ export const DateField = ({ label, value, onChange }: TProps) => {
     if (value) {
       const [year, month, day] = value.split("-");
       setSelectedDate({ year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
+      setInputValue(value);
     }
   }, [value]);
 
@@ -38,10 +45,13 @@ export const DateField = ({ label, value, onChange }: TProps) => {
     const newDate = event.target.value;
     const [year, month, day] = newDate.split("-");
 
+    setInputValue(newDate);
+
     if (year) {
       setSelectedDate({ year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
     }
-    if (onChange && year) {
+    const valid = year || !newDate;
+    if (onChange && valid) {
       onChange(newDate);
     }
   };
@@ -69,6 +79,7 @@ export const DateField = ({ label, value, onChange }: TProps) => {
   const handleDayChange = (day: number) => {
     setSelectedDate((prevState) => ({ ...prevState, day }));
     const dateString = `${selectedDate.year}-${(selectedDate.month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+    setInputValue(dateString);
     setIsCalendarVisible(false);
 
     if (onChange) {
@@ -140,8 +151,6 @@ export const DateField = ({ label, value, onChange }: TProps) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isCalendarVisible]);
-
-  const inputValue = `${selectedDate.year}-${(selectedDate.month + 1).toString().padStart(2, "0")}-${selectedDate.day.toString().padStart(2, "0")}`;
 
   return (
     <div className={styles.layout}>
