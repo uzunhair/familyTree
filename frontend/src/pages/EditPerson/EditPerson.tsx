@@ -7,6 +7,7 @@ import {getIds} from "src/pages/EditPerson/lib/helper/getIds";
 import {mergedPersons, TInputMultiple, TMergedPersons} from "src/pages/EditPerson/lib/helper/mergedPersons";
 import {editUserSchema} from "src/pages/EditPerson/lib/schema/editUser";
 import {getGenderById} from "src/shared/lib/helpers/getGender";
+import {DateField} from "src/shared/ui/DateField";
 import {User, Users} from "src/shared/ui/Icon";
 import {Textarea} from "src/shared/ui/Textarea";
 import {TextInput} from "src/shared/ui/TextInput";
@@ -107,11 +108,16 @@ function EditPerson() {
             )}
           />
           <div className="grid grid-cols-12 gap-6">
+            <div className="mt-4 col-span-12 lg:col-span-6">
+              <DateField />
+            </div>
+          </div>
+          <div className="grid grid-cols-12 gap-6">
             <Controller
               name="birthday"
               control={control}
               render={({field: {value, onChange}}) => (
-                <TextInput label="Дата рождения" value={value} onChange={onChange} className="mt-4 col-span-12 lg:col-span-6"/>
+                <TextInput label="Дата рождения" type="date" value={value} onChange={onChange} className="mt-4 col-span-12 lg:col-span-6"/>
               )}
             />
             <GenderInput control={control} />
