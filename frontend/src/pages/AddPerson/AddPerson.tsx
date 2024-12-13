@@ -1,6 +1,9 @@
 import {useEffect, useState} from "react";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import {
+  useNavigate,
+} from "react-router-dom";
 import {addUserSchema} from "src/pages/AddPerson/AddPersonForm/lib/schema/addUser";
 import {GenderInput} from "src/pages/EditPerson/GenderInput";
 import {getIds} from "src/pages/EditPerson/lib/helper/getIds";
@@ -48,6 +51,7 @@ const defaultValues: TInputs = {
 
 function AddPerson() {
   const [apiPersons, setApiPersons] = useState<TInputItem[]>([]);
+  const navigate = useNavigate();
   const {
     handleSubmit,
     control,
@@ -73,8 +77,9 @@ function AddPerson() {
     }
 
     const {title, birthday, gender, comments, father, mother, spouse, friends, colleagues, familiar} = data;
+    const id = setPersonId(title);
     const mainPerson = {
-      id: setPersonId(title),
+      id: id,
       title: title,
       birthday: birthday,
       gender: gender.id,
@@ -92,6 +97,7 @@ function AddPerson() {
     UpdatePersonByID(mainPerson, mergedPersonsResult, "add")
       .then((item) => {
         reset(data);
+        navigate(`edit-person/${id}`);
         // eslint-disable-next-line no-console
         console.log(
           "%c Update person %c " + item + " ",
