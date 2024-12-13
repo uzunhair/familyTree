@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef, useId} from "react";
 import { MonthSelect } from "src/shared/ui/DateField/MonthSelect";
 import { YearSelect } from "src/shared/ui/DateField/YearSelect";
 import styles from "./DateField.module.scss";
 
 type TProps = {
   label?: string;
-  onDateChange?: (value: string) => void;
+  value?: string;
+  onChange: (value: string) => void;
 };
 
-export const DateField = ({ label, onDateChange }: TProps) => {
+export const DateField = ({ label, onChange }: TProps) => {
   const date = new Date();
+  const id = useId();
   const fullYear = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();
@@ -20,7 +22,7 @@ export const DateField = ({ label, onDateChange }: TProps) => {
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  const handleDateChange = (event: any) => {
+  const handleInputChange = (event: any) => {
     const newDate = event.target.value;
     const [year, month, day] = newDate.split("-");
 
@@ -29,8 +31,8 @@ export const DateField = ({ label, onDateChange }: TProps) => {
     if (year) {
       setSelectedDate({ year, month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
     }
-    if (onDateChange) {
-      onDateChange(newDate);
+    if (onChange) {
+      onChange(newDate);
     }
   };
 
@@ -126,11 +128,12 @@ export const DateField = ({ label, onDateChange }: TProps) => {
 
   return (
     <div className={styles.layout}>
-      {label && <label>{label}</label>}
+      {label && <label className="inline-block mb-2 cursor-pointer" htmlFor={`textField${id}`}>{label}</label>}
       <input
         type="date"
+        id={`textField${id}`}
         value={inputValue}
-        onChange={handleDateChange}
+        onChange={handleInputChange}
         onFocus={() => setIsCalendarVisible(true)}
         className="
         transition duration-200

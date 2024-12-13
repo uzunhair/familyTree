@@ -45,7 +45,7 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
       {label && (
         <label
           htmlFor={`textField${id}`}
-          className="inline-block mb-2"
+          className="inline-block mb-2 cursor-pointer"
         >
           {label}
         </label>

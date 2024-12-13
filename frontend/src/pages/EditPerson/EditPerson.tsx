@@ -108,16 +108,13 @@ function EditPerson() {
             )}
           />
           <div className="grid grid-cols-12 gap-6">
-            <div className="mt-4 col-span-12 lg:col-span-6">
-              <DateField />
-            </div>
-          </div>
-          <div className="grid grid-cols-12 gap-6">
             <Controller
               name="birthday"
               control={control}
               render={({field: {value, onChange}}) => (
-                <TextInput label="Дата рождения" type="date" value={value} onChange={onChange} className="mt-4 col-span-12 lg:col-span-6"/>
+                <div className="mt-4 col-span-12 lg:col-span-6">
+                  <DateField label="Дата рождения" value={value} onChange={onChange} />
+                </div>
               )}
             />
             <GenderInput control={control} />
