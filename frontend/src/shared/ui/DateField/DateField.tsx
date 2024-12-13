@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useRef, useId} from "react";
-import { MonthSelect } from "src/shared/ui/DateField/MonthSelect";
-import { YearSelect } from "src/shared/ui/DateField/YearSelect";
+import React, {useEffect, useId, useRef, useState} from "react";
+import {MonthSelect} from "src/shared/ui/DateField/MonthSelect";
+import {YearSelect} from "src/shared/ui/DateField/YearSelect";
 import styles from "./DateField.module.scss";
 
 type TProps = {
@@ -9,18 +9,41 @@ type TProps = {
   onChange: (value: string) => void;
 };
 
-export const DateField = ({ label, onChange }: TProps) => {
-  const date = new Date();
+export const DateField = ({ label, value, onChange }: TProps) => {
   const id = useId();
-  const fullYear = date.getFullYear();
+  const date = new Date();
+  const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();
-  const [selectedDate, setSelectedDate] = useState({ year: fullYear, month, day });
-  const [inputValue, setInputValue] = useState(
-    `${selectedDate.year}-${(selectedDate.month + 1).toString().padStart(2, "0")}-${selectedDate.day}`
-  );
+
+  const [selectedDate, setSelectedDate] = useState(() => {
+    if (value) {
+      const [year, month, day] = value.split("-");
+      return { year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) };
+    }
+    return { year, month, day: day };
+  });
+
+  const [inputValue, setInputValue] = useState(() => {
+    if (value) {
+      return value;
+    }
+    return `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+  });
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (value) {
+      const [year, month, day] = value.split("-");
+      setSelectedDate({ year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
+      setInputValue(value);
+    }
+  }, [value]);
+
+  useEffect(() => {
+
+  }, [selectedDate]);
 
   const handleInputChange = (event: any) => {
     const newDate = event.target.value;
@@ -29,9 +52,9 @@ export const DateField = ({ label, onChange }: TProps) => {
     setInputValue(newDate);
 
     if (year) {
-      setSelectedDate({ year, month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
+      setSelectedDate({ year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
     }
-    if (onChange) {
+    if (onChange && year) {
       onChange(newDate);
     }
   };
@@ -58,10 +81,13 @@ export const DateField = ({ label, onChange }: TProps) => {
 
   const handleDayChange = (day: number) => {
     setSelectedDate((prevState) => ({ ...prevState, day }));
-    setInputValue(
-      `${selectedDate.year}-${(selectedDate.month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`
-    );
+    const dateString = `${selectedDate.year}-${(selectedDate.month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+    setInputValue(dateString);
     setIsCalendarVisible(false);
+
+    if (onChange) {
+      onChange(dateString);
+    }
   };
 
   const handleDown = () => {
@@ -159,7 +185,7 @@ export const DateField = ({ label, onChange }: TProps) => {
                 <path d="M7.919 0l2.748 2.667L5.333 8l5.334 5.333L7.919 16 0 8z" fillRule="nonzero"></path>
               </svg>
             </button>
-            <MonthSelect date={date} onChange={handleMonthChange} value={selectedDate.month} />
+            <MonthSelect onChange={handleMonthChange} value={selectedDate.month} />
             <YearSelect fullYear={selectedDate.year} onChange={handleYearChange} />
             <button type="button" onClick={handleUp} className={styles.upDownBtn}>
               <svg width="11" height="16" xmlns="http://www.w3.org/2000/svg">
