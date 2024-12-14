@@ -29,7 +29,7 @@ export type TMergedPersons = {
 }
 
 export const mergedPersons = ({data, defaultValues }: TMergedPersons) => {
-  const {gender, spouse, friends, colleagues, familiar, children} = data;
+  const {gender, spouse, friends, colleagues, familiar, children, father, mother} = data;
   const relatedUsers: TUpdate[] = [];
 
   const addRelatedUsers = (users: TInputItem[], key: keyof TInputMultiple) => {
@@ -61,6 +61,16 @@ export const mergedPersons = ({data, defaultValues }: TMergedPersons) => {
     children.forEach(user => {
       relatedUsers.push({ ...user, [parent]: "add" });
     });
+  }
+
+  console.log("_mother", mother, father);
+
+  if(mother?.id) {
+    relatedUsers.push({ ...mother });
+  }
+
+  if(father?.id) {
+    relatedUsers.push({ ...father });
   }
 
   return relatedUsers.reduce((acc: TUpdate[], person) => {
