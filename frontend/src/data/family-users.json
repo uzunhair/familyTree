@@ -34,8 +34,8 @@
     "title": "Зайнулабидов Ражабдибир Расулулаевич",
     "birthday": "",
     "gender": "male",
-    "father": "",
-    "mother": "",
+    "father": "1734171751547_ysd",
+    "mother": "1734171878749_srb",
     "spouse": [
       "1733376384970_rkr"
     ],
@@ -89,7 +89,7 @@
     "id": "1733377018523_yszh",
     "title": "Зайнулабидов Расулула Ражабдибирович",
     "birthday": "",
-    "gender": "",
+    "gender": "male",
     "father": "1733376384970_yzhs",
     "mother": "1733376384970_rkr",
     "spouse": [],
@@ -106,6 +106,36 @@
     "father": "1733376803894_ygzh",
     "mother": "",
     "spouse": [],
+    "friends": [],
+    "colleagues": [],
+    "familiar": [],
+    "comments": ""
+  },
+  {
+    "id": "1734171751547_ysd",
+    "title": "Зайнулабидов Расулула Дедушка",
+    "birthday": "",
+    "gender": "male",
+    "father": "",
+    "mother": "",
+    "spouse": [
+      "1734171878749_srb"
+    ],
+    "friends": [],
+    "colleagues": [],
+    "familiar": [],
+    "comments": ""
+  },
+  {
+    "id": "1734171878749_srb",
+    "title": "Муслимова Каримат Бабушка",
+    "birthday": "",
+    "gender": "female",
+    "father": "",
+    "mother": "",
+    "spouse": [
+      "1734171751547_ysd"
+    ],
     "friends": [],
     "colleagues": [],
     "familiar": [],
