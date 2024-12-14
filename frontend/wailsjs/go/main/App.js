@@ -6,6 +6,10 @@ export function GetAllPerson() {
   return window['go']['main']['App']['GetAllPerson']();
 }
 
+export function GetNodes() {
+  return window['go']['main']['App']['GetNodes']();
+}
+
 export function GetPersonByID(arg1) {
   return window['go']['main']['App']['GetPersonByID'](arg1);
 }

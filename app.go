@@ -6,26 +6,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"wails/utils/force-graph"
+	"wails/utils/types"
 )
 
 // App struct
 type App struct {
 	ctx context.Context
-}
-
-// FullPersonInfo представляет человека в семейном древе
-type FullPersonInfo struct {
-	ID         string   `json:"id"`
-	Title      string   `json:"title"`
-	Birthday   string   `json:"birthday"`
-	Gender     string   `json:"gender"`
-	Father     string   `json:"father"`
-	Mother     string   `json:"mother"`
-	Spouse     []string `json:"spouse"`
-	Friends    []string `json:"friends"`
-	Colleagues []string `json:"colleagues"`
-	Familiar   []string `json:"familiar"`
-	Comments   string   `json:"comments"`
 }
 
 type BasicPersonInfo struct {
@@ -52,8 +39,8 @@ func (a *App) Greet(name string) string {
 }
 
 // SaveToJSON сохраняет семейное древо в файл JSON
-func (a *App) SaveToJSON(filename string, people []FullPersonInfo) error {
-	// Marshal the slice of FullPersonInfo structs into JSON
+func (a *App) SaveToJSON(filename string, people []types.FullPersonInfo) error {
+	// Marshal the slice of types.FullPersonInfo structs into JSON
 	byteValue, err := json.MarshalIndent(people, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal JSON: %w", err)
@@ -69,15 +56,15 @@ func (a *App) SaveToJSON(filename string, people []FullPersonInfo) error {
 }
 
 // LoadFromJSON загружает семейное древо из файла JSON
-func (a *App) LoadFromJSON() ([]FullPersonInfo, error) {
+func (a *App) LoadFromJSON() ([]types.FullPersonInfo, error) {
 	// Read the file's content
 	byteValue, err := os.ReadFile(personsFilePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file: %w", err)
 	}
 
-	// Unmarshal the JSON into a slice of FullPersonInfo structs
-	var people []FullPersonInfo
+	// Unmarshal the JSON into a slice of types.FullPersonInfo structs
+	var people []types.FullPersonInfo
 	err = json.Unmarshal(byteValue, &people)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal JSON: %w", err)
@@ -104,8 +91,8 @@ func (a *App) GetAllPerson() ([]BasicPersonInfo, error) {
 }
 
 type SearchResult struct {
-	Persons []FullPersonInfo `json:"persons"`
-	Count   int              `json:"count"`
+	Persons []types.FullPersonInfo `json:"persons"`
+	Count   int                    `json:"count"`
 }
 
 func (a *App) GetPersonList(search string) (SearchResult, error) {
@@ -118,7 +105,7 @@ func (a *App) GetPersonList(search string) (SearchResult, error) {
 		return SearchResult{}, fmt.Errorf("loaded persons is nil")
 	}
 
-	var persons []FullPersonInfo
+	var persons []types.FullPersonInfo
 	search = strings.ToLower(search)
 	for _, person := range people {
 		var title = strings.Contains(strings.ToLower(person.Title), search)
@@ -132,7 +119,7 @@ func (a *App) GetPersonList(search string) (SearchResult, error) {
 
 	if len(persons) == 0 {
 		return SearchResult{
-			Persons: []FullPersonInfo{},
+			Persons: []types.FullPersonInfo{},
 			Count:   0,
 		}, nil
 	}
@@ -180,7 +167,7 @@ func (a *App) GetPersonByID(id string) (PersonWithDetails, error) {
 		return PersonWithDetails{}, fmt.Errorf("failed to load persons: %w", err)
 	}
 
-	var person FullPersonInfo
+	var person types.FullPersonInfo
 	for _, p := range people {
 		if p.ID == id {
 			person = p
@@ -349,7 +336,7 @@ const (
 )
 
 // UpdatePersonByID обновляет данные пользователя по ID
-func (a *App) UpdatePersonByID(updatedPerson FullPersonInfo, newPersons []FullPersonInfoActions, action Action) (string, error) {
+func (a *App) UpdatePersonByID(updatedPerson types.FullPersonInfo, newPersons []FullPersonInfoActions, action Action) (string, error) {
 	people, err := a.LoadFromJSON()
 	if err != nil {
 		return updatedPerson.ID, fmt.Errorf("failed to load persons: %w", err)
@@ -380,7 +367,7 @@ func (a *App) UpdatePersonByID(updatedPerson FullPersonInfo, newPersons []FullPe
 		var foundNew bool
 		for i, person := range people {
 			if person.ID == newPerson.ID {
-				people[i] = FullPersonInfo{
+				people[i] = types.FullPersonInfo{
 					ID:         person.ID,
 					Title:      person.Title,
 					Birthday:   person.Birthday,
@@ -397,7 +384,7 @@ func (a *App) UpdatePersonByID(updatedPerson FullPersonInfo, newPersons []FullPe
 			}
 		}
 		if !foundNew {
-			people = append(people, FullPersonInfo{
+			people = append(people, types.FullPersonInfo{
 				ID:         newPerson.ID,
 				Title:      newPerson.Title,
 				Birthday:   getStringValue(newPerson.Birthday),
@@ -423,4 +410,14 @@ func (a *App) UpdatePersonByID(updatedPerson FullPersonInfo, newPersons []FullPe
 	}
 
 	return updatedPerson.ID, nil
+}
+
+func (a *App) GetNodes() ([]force_graph.NodesPersonInfo, error) {
+	people, err := a.LoadFromJSON()
+	if err != nil {
+		return nil, fmt.Errorf("failed to load persons: %w", err)
+	}
+
+	modification := force_graph.GetNodes(people)
+	return modification, nil
 }

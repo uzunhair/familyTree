@@ -3,4 +3,5 @@ export const links = {
   addPerson: "/add-person",
   editPerson: (value: string) => `/edit-person/${value}`,
   allPersons: "/all-persons",
+  forceGraph: "/force-graph",
 };
