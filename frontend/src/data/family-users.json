@@ -6,7 +6,9 @@
     "gender": "male",
     "father": "1733376384970_yzhs",
     "mother": "1733376384970_rkr",
-    "spouse": [],
+    "spouse": [
+      "1733376384970_yir"
+    ],
     "friends": [],
     "colleagues": [],
     "familiar": [],
@@ -19,7 +21,9 @@
     "gender": "female",
     "father": "",
     "mother": "",
-    "spouse": [],
+    "spouse": [
+      "1733376384970_yzun"
+    ],
     "friends": [],
     "colleagues": [],
     "familiar": [],
@@ -32,7 +36,9 @@
     "gender": "male",
     "father": "",
     "mother": "",
-    "spouse": [],
+    "spouse": [
+      "1733376384970_rkr"
+    ],
     "friends": [],
     "colleagues": [],
     "familiar": [],
@@ -45,7 +51,9 @@
     "gender": "",
     "father": "",
     "mother": "",
-    "spouse": null,
+    "spouse": [
+      "1733376384970_yzhs"
+    ],
     "friends": null,
     "colleagues": null,
     "familiar": null,
