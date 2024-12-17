@@ -5,7 +5,7 @@ interface ValueSelectProps {
   initialValue: string | number;
   options: (string | number)[];
   generateOptions?: (start: number, count: number) => (string | number)[];
-  onValueChange: (value: number|string) => void;
+  onValueChange: (value: number | string) => void;
   className?: string;
   classNameBtn?: string;
 }
@@ -16,7 +16,7 @@ export const ValueSelect = ({
   generateOptions,
   onValueChange,
   className = "",
-  classNameBtn = ""
+  classNameBtn = "",
 }: ValueSelectProps) => {
   const [value, setValue] = useState(initialValue);
   const [show, setShow] = useState(false);
@@ -25,7 +25,9 @@ export const ValueSelect = ({
 
   const handleScroll = (event: UIEvent<HTMLSelectElement>) => {
     const { currentTarget } = event;
-    const bottom = currentTarget.scrollHeight - Math.ceil(currentTarget.scrollTop) === currentTarget.clientHeight;
+    const bottom =
+      currentTarget.scrollHeight - Math.ceil(currentTarget.scrollTop) ===
+      currentTarget.clientHeight;
     if (bottom && generateOptions) {
       const lastOption = allOptions[allOptions.length - 1] as number;
       const newOptions = generateOptions(lastOption - 1, 100);

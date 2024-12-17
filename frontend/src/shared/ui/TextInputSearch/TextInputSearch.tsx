@@ -1,17 +1,17 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
-import {getDeclensionOfMatches} from "src/shared/lib/helpers/getDeclensionOfMatches";
+import { getDeclensionOfMatches } from "src/shared/lib/helpers/getDeclensionOfMatches";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import styles from "./TextInputSearch.module.scss";
 
 export type TInputItem = {
   id: string;
   title: string;
-}
+};
 
 type TTextInputSearch = TTextInput & {
   data: TInputItem[];
-  onChange: (value:string) => void;
-}
+  onChange: (value: string) => void;
+};
 
 export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
   const [filteredData, setFilteredData] = useState<TInputItem[]>([]);
@@ -25,7 +25,7 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
   const handleBlur = () => {
     setIsFocused(false);
   };
-  
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     if (props.onChange) {
@@ -34,7 +34,7 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
   };
 
   useEffect(() => {
-    const filtered = data.filter(item =>
+    const filtered = data.filter((item) =>
       item.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(filtered);
@@ -50,12 +50,7 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
 
   return (
     <div className={styles.layout}>
-      <TextInput
-        {...props}
-        onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      >
+      <TextInput {...props} onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur}>
         {!!filteredData.length && searchTerm && isFocused && (
           <div className={styles.dropdown}>
             <div className="p-2 px-3 font-medium">
@@ -63,7 +58,7 @@ export const TextInputSearch = ({ data, ...props }: TTextInputSearch) => {
             </div>
             <div className="h-px bg-slate-200/60 dark:bg-darkmode-400" />
             <div className={styles.scroll}>
-              {filteredData.map(person => {
+              {filteredData.map((person) => {
                 return (
                   <div
                     key={person.id}

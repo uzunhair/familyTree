@@ -5,7 +5,7 @@ import {
   forwardRef,
   useId,
   useState,
-  useEffect
+  useEffect,
 } from "react";
 
 export type TTextInput = InputHTMLAttributes<HTMLTextAreaElement> & {
@@ -16,50 +16,40 @@ export type TTextInput = InputHTMLAttributes<HTMLTextAreaElement> & {
   className?: string;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
   error?: any;
-}
+};
 
-export const Textarea = forwardRef<HTMLTextAreaElement, TTextInput>(({
-  label,
-  placeholder = label,
-  className,
-  onChange,
-  error,
-  value: propValue,
-  ...props
-}, ref) => {
-  const id = useId();
-  const [value, setValue] = useState("");
+export const Textarea = forwardRef<HTMLTextAreaElement, TTextInput>(
+  ({ label, placeholder = label, className, onChange, error, value: propValue, ...props }, ref) => {
+    const id = useId();
+    const [value, setValue] = useState("");
 
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
-    if (onChange) {
-      onChange(event);
-    }
-  };
+    const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+      setValue(event.target.value);
+      if (onChange) {
+        onChange(event);
+      }
+    };
 
-  useEffect(() => {
-    setValue(propValue || "");
-  }, [propValue]);
+    useEffect(() => {
+      setValue(propValue || "");
+    }, [propValue]);
 
-  return (
-    <div className={className}>
-      {label && (
-        <label
-          htmlFor={`textField${id}`}
-          className="inline-block mb-2"
-        >
-          {label}
-        </label>
-      )}
-      <textarea
-        {...props}
-        id={`textField${id}`}
-        placeholder={placeholder}
-        ref={ref}
-        value={value}
-        onChange={handleChange}
-        autoComplete="off"
-        className="
+    return (
+      <div className={className}>
+        {label && (
+          <label htmlFor={`textField${id}`} className="inline-block mb-2">
+            {label}
+          </label>
+        )}
+        <textarea
+          {...props}
+          id={`textField${id}`}
+          placeholder={placeholder}
+          ref={ref}
+          value={value}
+          onChange={handleChange}
+          autoComplete="off"
+          className="
          [&[readonly]]:bg-slate-100
          [&[readonly]]:cursor-not-allowed
          border-slate-200
@@ -85,10 +75,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TTextInput>(({
          text-sm
          transition
          w-full
-        "/>
-      {error && (<div className="mt-2 text-danger">{error.message}</div>)}
-    </div>
-  );
-});
+        "
+        />
+        {error && <div className="mt-2 text-danger">{error.message}</div>}
+      </div>
+    );
+  }
+);
 
 Textarea.displayName = "TextInput";

@@ -1,11 +1,11 @@
 import React from "react";
-import {createRoot} from "react-dom/client";
-import {Route, Routes, HashRouter} from "react-router-dom";
+import { createRoot } from "react-dom/client";
+import { Route, Routes, HashRouter } from "react-router-dom";
 import AddPerson from "src/pages/AddPerson";
-import {AllPersons} from "src/pages/AllPersons";
+import { AllPersons } from "src/pages/AllPersons";
 import EditPerson from "src/pages/EditPerson";
-import {ForceGraph} from "src/pages/ForceGraph";
-import {links} from "src/shared/lib/helpers/links";
+import { ForceGraph } from "src/pages/ForceGraph";
+import { links } from "src/shared/lib/helpers/links";
 import App from "./App";
 import "./style.scss";
 import "./assets/styles/simplebar.css";
@@ -28,7 +28,7 @@ root.render(
         <Route path={links.editPerson(":id")} element={<EditPerson />} />
         <Route path={links.allPersons} element={<AllPersons />} />
         <Route path={links.forceGraph} element={<ForceGraph />} />
-        <Route path="/test" element={<App/>} />
+        <Route path="/test" element={<App />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>

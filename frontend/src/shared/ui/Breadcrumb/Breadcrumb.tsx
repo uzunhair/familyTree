@@ -1,11 +1,11 @@
-import {Link} from "react-router-dom";
-import {links} from "src/shared/lib/helpers/links";
+import { Link } from "react-router-dom";
+import { links } from "src/shared/lib/helpers/links";
 
 type TProps = {
   title?: string;
-}
+};
 
-export const Breadcrumb = ({title}: TProps) => {
+export const Breadcrumb = ({ title }: TProps) => {
   return (
     <nav
       aria-label="breadcrumb"

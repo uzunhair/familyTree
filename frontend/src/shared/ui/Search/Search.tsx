@@ -1,5 +1,5 @@
-import {Link} from "react-router-dom";
-import {links} from "src/shared/lib/helpers/links";
+import { Link } from "react-router-dom";
+import { links } from "src/shared/lib/helpers/links";
 
 export const Search = () => {
   return (
@@ -23,8 +23,8 @@ export const Search = () => {
           data-lucide="search"
           className="lucide lucide-search stroke-1.5 w-5 h-5 absolute inset-y-0 right-0 my-auto mr-3 text-slate-600 dark:text-slate-500"
         >
-          <circle cx={11} cy={11} r={8}/>
-          <path d="m21 21-4.3-4.3"/>
+          <circle cx={11} cy={11} r={8} />
+          <path d="m21 21-4.3-4.3" />
         </svg>
       </div>
       <Link className="relative text-white/70 sm:hidden" to={links.home}>
@@ -41,8 +41,8 @@ export const Search = () => {
           data-lucide="search"
           className="lucide lucide-search stroke-1.5 w-5 h-5 dark:text-slate-500"
         >
-          <circle cx={11} cy={11} r={8}/>
-          <path d="m21 21-4.3-4.3"/>
+          <circle cx={11} cy={11} r={8} />
+          <path d="m21 21-4.3-4.3" />
         </svg>
       </Link>
     </div>

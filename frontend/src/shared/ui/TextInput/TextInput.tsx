@@ -1,4 +1,13 @@
-import { ChangeEvent, ChangeEventHandler, InputHTMLAttributes, ReactNode, forwardRef, useId, useState, useEffect } from "react";
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  InputHTMLAttributes,
+  ReactNode,
+  forwardRef,
+  useId,
+  useState,
+  useEffect,
+} from "react";
 import styles from "./TextInput.module.scss";
 
 export type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
@@ -11,56 +20,57 @@ export type TTextInput = InputHTMLAttributes<HTMLInputElement> & {
   value?: string;
   type?: string;
   error?: any;
-}
+};
 
-export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({ 
-  label, 
-  placeholder = label, 
-  className,
-  onChange,
-  children,
-  icon, 
-  error,
-  type = "text",
-  value: propValue,
-  ...props
-}, ref) => {
-  const id = useId();
+export const TextInput = forwardRef<HTMLInputElement, TTextInput>(
+  (
+    {
+      label,
+      placeholder = label,
+      className,
+      onChange,
+      children,
+      icon,
+      error,
+      type = "text",
+      value: propValue,
+      ...props
+    },
+    ref
+  ) => {
+    const id = useId();
 
-  const [value, setValue] = useState(propValue || "");
+    const [value, setValue] = useState(propValue || "");
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-    if (onChange) {
-      onChange(event);
-    }
-  };
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+      setValue(event.target.value);
+      if (onChange) {
+        onChange(event);
+      }
+    };
 
-  useEffect(() => {
-    setValue(propValue || "");
-  }, [propValue]);
+    useEffect(() => {
+      setValue(propValue || "");
+    }, [propValue]);
 
-  return (
-    <div className={className}>
-      {label && (
-        <label
-          htmlFor={`textField${id}`}
-          className="inline-block mb-2 cursor-pointer"
-        >
-          {label}
-        </label>
-      )}
-      <div className={styles.input}>
-        <input
-          {...props}
-          type={type}
-          id={`textField${id}`}
-          placeholder={placeholder}
-          ref={ref}
-          value={value}
-          onChange={handleChange}
-          autoComplete="off"
-          className="
+    return (
+      <div className={className}>
+        {label && (
+          <label htmlFor={`textField${id}`} className="inline-block mb-2 cursor-pointer">
+            {label}
+          </label>
+        )}
+        <div className={styles.input}>
+          <input
+            {...props}
+            type={type}
+            id={`textField${id}`}
+            placeholder={placeholder}
+            ref={ref}
+            value={value}
+            onChange={handleChange}
+            autoComplete="off"
+            className="
           transition duration-200
           ease-in-out
           w-full
@@ -74,17 +84,15 @@ export const TextInput = forwardRef<HTMLInputElement, TTextInput>(({
           focus:ring-opacity-20
           focus:border-primary
           focus:border-opacity-40
-        "/>
-        {icon && (
-          <div className={styles.icon}>
-            {icon}
-          </div>
-        )}
-        {children}
+        "
+          />
+          {icon && <div className={styles.icon}>{icon}</div>}
+          {children}
+        </div>
+        {error && <div className="mt-2 text-danger">{error.message}</div>}
       </div>
-      {error && (<div className="mt-2 text-danger">{error.message}</div>)}
-    </div>
-  );
-});
+    );
+  }
+);
 
 TextInput.displayName = "TextInput";

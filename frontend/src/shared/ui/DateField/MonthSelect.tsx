@@ -9,7 +9,10 @@ type TProps = {
 
 export const MonthSelect = ({ value: initValue, onChange }: TProps) => {
   const date = new Date();
-  const months = useMemo(() => Array.from({ length: 12 }, (_, i) => getMonthName({ monthIndex: i, date })), [date]);
+  const months = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => getMonthName({ monthIndex: i, date })),
+    [date]
+  );
 
   const handleValueChange = (newValue: string | number) => {
     const monthIndex = months.indexOf(newValue as string);

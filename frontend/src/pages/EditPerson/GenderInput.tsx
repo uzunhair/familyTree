@@ -1,16 +1,16 @@
-import {Controller} from "react-hook-form";
-import {GENDER} from "src/shared/lib/helpers/getGender";
-import {TextInputSelect} from "src/shared/ui/TextInputSelect";
+import { Controller } from "react-hook-form";
+import { GENDER } from "src/shared/lib/helpers/getGender";
+import { TextInputSelect } from "src/shared/ui/TextInputSelect";
 
 type TProps = {
   control: any;
-}
+};
 
 export const GenderInput = ({ control }: TProps) => (
   <Controller
     name="gender"
     control={control}
-    render={({field: {value, onChange}, fieldState: {error}}) => (
+    render={({ field: { value, onChange }, fieldState: { error } }) => (
       <TextInputSelect
         label="Пол"
         value={value}

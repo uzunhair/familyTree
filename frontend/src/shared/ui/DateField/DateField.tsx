@@ -1,6 +1,6 @@
-import React, {useEffect, useId, useMemo, useRef, useState} from "react";
-import {MonthSelect} from "src/shared/ui/DateField/MonthSelect";
-import {YearSelect} from "src/shared/ui/DateField/YearSelect";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
+import { MonthSelect } from "src/shared/ui/DateField/MonthSelect";
+import { YearSelect } from "src/shared/ui/DateField/YearSelect";
 import styles from "./DateField.module.scss";
 
 type TProps = {
@@ -36,7 +36,11 @@ export const DateField = ({ label, value, onChange }: TProps) => {
   useEffect(() => {
     if (value) {
       const [year, month, day] = value.split("-");
-      setSelectedDate({ year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
+      setSelectedDate({
+        year: parseInt(year, 10),
+        month: parseInt(month, 10) - 1,
+        day: parseInt(day, 10),
+      });
       setInputValue(value);
     }
   }, [value]);
@@ -48,7 +52,11 @@ export const DateField = ({ label, value, onChange }: TProps) => {
     setInputValue(newDate);
 
     if (year) {
-      setSelectedDate({ year: parseInt(year, 10), month: parseInt(month, 10) - 1, day: parseInt(day, 10) });
+      setSelectedDate({
+        year: parseInt(year, 10),
+        month: parseInt(month, 10) - 1,
+        day: parseInt(day, 10),
+      });
     }
     const valid = year || !newDate;
     if (onChange && valid) {
@@ -61,12 +69,21 @@ export const DateField = ({ label, value, onChange }: TProps) => {
     return createDate.getDate();
   };
 
-  const days = useMemo(() => numberDaysInMonth(selectedDate.year, selectedDate.month), [selectedDate.year, selectedDate.month]);
-  const skip = useMemo(() => new Date(selectedDate.year, selectedDate.month, 1).getDay(), [selectedDate.year, selectedDate.month]);
+  const days = useMemo(
+    () => numberDaysInMonth(selectedDate.year, selectedDate.month),
+    [selectedDate.year, selectedDate.month]
+  );
+  const skip = useMemo(
+    () => new Date(selectedDate.year, selectedDate.month, 1).getDay(),
+    [selectedDate.year, selectedDate.month]
+  );
 
   const weekName = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
   const weekNumber = [6, 0, 1, 2, 3, 4, 5];
-  const daysOfWeek = useMemo(() => Array.from({ length: weekNumber[skip] }, (_, i) => i + 1), [skip]);
+  const daysOfWeek = useMemo(
+    () => Array.from({ length: weekNumber[skip] }, (_, i) => i + 1),
+    [skip]
+  );
 
   const handleMonthChange = (month: number) => {
     setSelectedDate((prevState) => ({ ...prevState, month }));
@@ -154,7 +171,11 @@ export const DateField = ({ label, value, onChange }: TProps) => {
 
   return (
     <div className={styles.layout}>
-      {label && <label className="inline-block mb-2 cursor-pointer" htmlFor={`textField${id}`}>{label}</label>}
+      {label && (
+        <label className="inline-block mb-2 cursor-pointer" htmlFor={`textField${id}`}>
+          {label}
+        </label>
+      )}
       <input
         type="date"
         id={`textField${id}`}
@@ -182,14 +203,20 @@ export const DateField = ({ label, value, onChange }: TProps) => {
           <div className="flex gap-3 mb-2 items-center">
             <button type="button" onClick={handleDown} className={styles.upDownBtn}>
               <svg width="11" height="16" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.919 0l2.748 2.667L5.333 8l5.334 5.333L7.919 16 0 8z" fillRule="nonzero"></path>
+                <path
+                  d="M7.919 0l2.748 2.667L5.333 8l5.334 5.333L7.919 16 0 8z"
+                  fillRule="nonzero"
+                ></path>
               </svg>
             </button>
             <MonthSelect onChange={handleMonthChange} value={selectedDate.month} />
             <YearSelect fullYear={selectedDate.year} onChange={handleYearChange} />
             <button type="button" onClick={handleUp} className={styles.upDownBtn}>
               <svg width="11" height="16" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2.748 16L0 13.333 5.333 8 0 2.667 2.748 0l7.919 8z" fillRule="nonzero"></path>
+                <path
+                  d="M2.748 16L0 13.333 5.333 8 0 2.667 2.748 0l7.919 8z"
+                  fillRule="nonzero"
+                ></path>
               </svg>
             </button>
           </div>
