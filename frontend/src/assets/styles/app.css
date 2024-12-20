@@ -11720,3 +11720,8 @@ select {
     content: var(--tw-content);
     background-color: #00000080
 }
+
+
+.z-index-50 {
+    z-index: 50 !important;
+}

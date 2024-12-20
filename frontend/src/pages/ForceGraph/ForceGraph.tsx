@@ -72,6 +72,7 @@ export const ForceGraph = () => {
       <ForceGraph2D
         graphData={date}
         nodeLabel={nodeLabel}
+        // @ts-ignore
         dagMode={dagMode}
         // node объект, название
         // nodeCanvasObject={(node, ctx, globalScale) => {

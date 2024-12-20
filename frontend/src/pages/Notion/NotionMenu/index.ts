@@ -1,0 +1,1 @@
+export { NotionMenu } from "./NotionMenu";

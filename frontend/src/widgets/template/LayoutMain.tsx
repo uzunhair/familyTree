@@ -96,12 +96,7 @@ export const LayoutMain = ({ children, title }: TProps) => {
         <div className="wrapper-box bg-gradient-to-b from-theme-1 to-theme-2 flex rounded-[1.3rem] -mt-[7px] md:mt-0 dark:from-darkmode-400 dark:to-darkmode-400 translate-y-[35px] before:block before:absolute before:inset-0 before:bg-black/[0.15] before:rounded-[1.3rem] before:z-[-1]">
           <SideNav />
           <div className="md:max-w-auto min-h-screen min-w-0 max-w-full flex-1 rounded-[1.3rem] bg-slate-100 px-4 pb-10 shadow-sm before:block before:h-px before:w-full before:content-[''] dark:bg-darkmode-700 md:px-[22px]">
-            {title && (
-              <div className="intro-y mt-8 flex items-center">
-                <h2 className="mr-auto text-lg font-medium">{title}</h2>
-              </div>
-            )}
-            <div className="mt-5 grid grid-cols-12 gap-6">{children}</div>
+            {children}
           </div>
         </div>
       </div>
