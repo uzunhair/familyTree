@@ -8,7 +8,7 @@ import { getIds } from "src/pages/EditPerson/lib/helper/getIds";
 import { mergedPersons, TMergedPersons } from "src/pages/EditPerson/lib/helper/mergedPersons";
 import { getGenderById } from "src/shared/lib/helpers/getGender";
 import { setPersonId } from "src/shared/lib/helpers/setPersonId";
-import { User, Users } from "src/shared/ui/Icon";
+import { UserIcon, UsersIcon } from "src/shared/ui/Icon";
 import { Textarea } from "src/shared/ui/Textarea";
 import { TextInput } from "src/shared/ui/TextInput";
 import { TextInputSearch } from "src/shared/ui/TextInputSearch";
@@ -171,7 +171,7 @@ function AddPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
-                  icon={<Users />}
+                  icon={<UsersIcon />}
                 />
               )}
             />
@@ -187,7 +187,7 @@ function AddPerson() {
                   error={error}
                   data={apiPersons}
                   className="mt-4"
-                  icon={<User />}
+                  icon={<UserIcon />}
                 />
               )}
             />
@@ -202,7 +202,7 @@ function AddPerson() {
                   onChange={onChange}
                   error={error}
                   data={apiPersons}
-                  icon={<User />}
+                  icon={<UserIcon />}
                   className="mt-4"
                 />
               )}
@@ -234,7 +234,7 @@ function AddPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
-                  icon={<Users />}
+                  icon={<UsersIcon />}
                 />
               )}
             />
@@ -250,7 +250,7 @@ function AddPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
-                  icon={<Users />}
+                  icon={<UsersIcon />}
                 />
               )}
             />
@@ -266,7 +266,7 @@ function AddPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
-                  icon={<Users />}
+                  icon={<UsersIcon />}
                 />
               )}
             />

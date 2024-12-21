@@ -4,6 +4,7 @@ import { NotionFilter } from "src/pages/Notion/NotionFilter";
 import { NotionItem } from "src/pages/Notion/NotionItem";
 import { TNotionItem } from "src/pages/Notion/NotionItem/NotionItem";
 import { NotionMenu } from "src/pages/Notion/NotionMenu";
+import { HashIcon } from "src/shared/ui/Icon";
 import { Layout } from "src/widgets/template/Layout";
 
 export const Notion = () => {
@@ -34,23 +35,7 @@ export const Notion = () => {
           <div className="intro-y box mt-5">
             <div className="flex flex-col-reverse border-b border-slate-200/60 p-5 text-slate-500 sm:flex-row">
               <div className="-mx-5 mt-3 flex items-center border-t border-slate-200/60 px-5 pt-5 sm:mx-0 sm:mt-0 sm:border-0 sm:px-0 sm:pt-0">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="icon-hash stroke-1.5 w-5 h-5"
-                >
-                  <line x1="4" x2="20" y1="9" y2="9"></line>
-                  <line x1="4" x2="20" y1="15" y2="15"></line>
-                  <line x1="10" x2="8" y1="3" y2="21"></line>
-                  <line x1="16" x2="14" y1="3" y2="21"></line>
-                </svg>
+                <HashIcon />
                 <div className="ml-5 pl-1 flex h-5 items-center justify-center">Заголовок</div>
               </div>
               <div className="flex items-center sm:ml-auto">

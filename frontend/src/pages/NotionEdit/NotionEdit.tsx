@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { TNotionItem } from "src/pages/Notion/NotionItem/NotionItem";
+import { AlignLeftIcon, EyeIcon } from "src/shared/ui/Icon";
 import { Tiptap } from "src/shared/ui/Tiptap/Tiptap";
 import { Layout } from "src/widgets/template/Layout";
 
@@ -70,22 +71,7 @@ export const NotionEdit = () => {
               type="button"
               className="transition duration-200 border shadow-sm items-center justify-center py-2 px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed !box ml-auto mr-2 flex sm:ml-0"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                data-lucide="eye"
-                className="lucide lucide-eye stroke-1.5 mr-2 h-4 w-4"
-              >
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                <circle cx={12} cy={12} r={3} />
-              </svg>
+              <EyeIcon />
               Открыть на сайте
             </button>
           </div>
@@ -147,23 +133,7 @@ export const NotionEdit = () => {
                       aria-selected="false"
                       className="tooltip cursor-pointer flex w-full items-center justify-center py-4"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={24}
-                        height={24}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        data-lucide="align-left"
-                        className="lucide lucide-align-left stroke-1.5 mr-2 h-4 w-4"
-                      >
-                        <line x1={21} x2={3} y1={6} y2={6} />
-                        <line x1={15} x2={3} y1={12} y2={12} />
-                        <line x1={17} x2={3} y1={18} y2={18} />
-                      </svg>
+                      <AlignLeftIcon />
                       Контент
                     </span>
                   </button>

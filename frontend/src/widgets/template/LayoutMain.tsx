@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { links } from "src/shared/lib/helpers/links";
 import { Breadcrumb } from "src/shared/ui/Breadcrumb";
+import { BarChart2Icon, BarChartIcon } from "src/shared/ui/Icon";
 import { Notifications } from "src/shared/ui/Notifications";
 import { Search } from "src/shared/ui/Search";
 import { SideNav } from "src/shared/ui/SideNav/SideNav";
@@ -62,23 +63,7 @@ export const LayoutMain = ({ children, title }: TProps) => {
             FamilyTree
           </Link>
           <div className="mobile-menu-toggler">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={24}
-              height={24}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              data-lucide="bar-chart2"
-              className="lucide lucide-bar-chart2 stroke-1.5 h-8 w-8 -rotate-90 transform text-white"
-            >
-              <line x1={18} x2={18} y1={20} y2={10} />
-              <line x1={12} x2={12} y1={20} y2={4} />
-              <line x1={6} x2={6} y1={20} y2={14} />
-            </svg>
+            <BarChart2Icon />
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { ChangeEvent, MouseEvent, KeyboardEvent, useEffect, useState } from "react";
 import { getDeclensionOfMatches } from "src/shared/lib/helpers/getDeclensionOfMatches";
 import { setPersonId } from "src/shared/lib/helpers/setPersonId";
+import { XIcon } from "src/shared/ui/Icon";
 import { TextInput, TTextInput } from "src/shared/ui/TextInput";
 import { TInputItem } from "src/shared/ui/TextInputSearch/TextInputSearch";
 import styles from "../TextInputSearch/TextInputSearch.module.scss";
@@ -175,22 +176,7 @@ export const TextInputSelect = ({
             "
               >
                 {v.title}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  data-lucide="x"
-                  className="lucide lucide-x stroke-1.5 w-5 h-5 mx-auto block"
-                >
-                  <path d="M18 6 6 18"></path>
-                  <path d="m6 6 12 12"></path>
-                </svg>
+                <XIcon />
               </button>
             );
           })}

@@ -12,7 +12,7 @@ import {
 import { editUserSchema } from "src/pages/EditPerson/lib/schema/editUser";
 import { getGenderById } from "src/shared/lib/helpers/getGender";
 import { DateField } from "src/shared/ui/DateField";
-import { User, Users } from "src/shared/ui/Icon";
+import { UserIcon, UsersIcon } from "src/shared/ui/Icon";
 import { Textarea } from "src/shared/ui/Textarea";
 import { TextInputSearch } from "src/shared/ui/TextInputSearch";
 import { TInputItem } from "src/shared/ui/TextInputSearch/TextInputSearch";
@@ -144,7 +144,7 @@ function EditPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
-                  icon={<Users />}
+                  icon={<UsersIcon />}
                 />
               )}
             />
@@ -160,7 +160,7 @@ function EditPerson() {
                   error={error}
                   data={apiPersons}
                   className="mt-4"
-                  icon={<User />}
+                  icon={<UserIcon />}
                 />
               )}
             />
@@ -175,7 +175,7 @@ function EditPerson() {
                   onChange={onChange}
                   error={error}
                   data={apiPersons}
-                  icon={<User />}
+                  icon={<UserIcon />}
                   className="mt-4"
                 />
               )}
@@ -207,7 +207,7 @@ function EditPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
-                  icon={<Users />}
+                  icon={<UsersIcon />}
                 />
               )}
             />
@@ -223,7 +223,7 @@ function EditPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
-                  icon={<Users />}
+                  icon={<UsersIcon />}
                 />
               )}
             />
@@ -239,7 +239,7 @@ function EditPerson() {
                   data={apiPersons}
                   className="mt-4"
                   multiple
-                  icon={<Users />}
+                  icon={<UsersIcon />}
                 />
               )}
             />

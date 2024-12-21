@@ -1,6 +1,8 @@
 import { KeyboardEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { links } from "src/shared/lib/helpers/links";
+import { SearchIcon, UserIcon, UsersIcon } from "src/shared/ui/Icon";
+import { Search } from "src/shared/ui/Search";
 import { Layout } from "src/widgets/template/Layout";
 import { GetPersonList } from "../../../wailsjs/go/main/App";
 
@@ -130,22 +132,7 @@ export const AllPersons = () => {
                 w-56
                 pr-10"
               />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                data-lucide="search"
-                className="lucide lucide-search stroke-1.5 absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4"
-              >
-                <circle cx={11} cy={11} r={8} />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
+              <SearchIcon />
             </div>
           </div>
         </div>
@@ -155,22 +142,7 @@ export const AllPersons = () => {
               <div className="box">
                 <div className="flex flex-col items-center border-b border-slate-200/60 p-5 dark:border-darkmode-400 lg:flex-row">
                   <div className="image-fit h-24 w-24 lg:mr-1 lg:h-12 lg:w-12 flex justify-center items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      data-lucide="user"
-                      className="lucide lucide-user stroke-1.5 w-8 h-8 mx-auto block"
-                    >
-                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                    <UserIcon />
                   </div>
                   <div className="mt-3 text-center lg:ml-2 lg:mr-auto lg:mt-0 lg:text-left">
                     <Link className="font-medium" to={links.editPerson(item.id)}>
