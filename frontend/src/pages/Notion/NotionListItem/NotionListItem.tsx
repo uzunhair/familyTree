@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { links } from "src/shared/lib/helpers/links";
 
-export type TNotionItem = {
+export type TNotionListItem = {
   id: number;
   title: string;
   created: string;
@@ -37,7 +37,7 @@ export type TNotionItem = {
   };
 };
 
-export const NotionItem = ({ title, id, created }: TNotionItem) => {
+export const NotionListItem = ({ title, id, created }: TNotionListItem) => {
   return (
     <div className="intro-y">
       <div className="transition duration-200 ease-in-out transform cursor-pointer inline-block sm:block border-b border-slate-200/60hover:relative hover:z-20 hover:shadow-md bg-white text-slate-800">
@@ -47,8 +47,8 @@ export const NotionItem = ({ title, id, created }: TNotionItem) => {
               {id}
             </Link>
           </div>
-          <div className="w-64 truncate sm:w-auto">
-            <Link className="ml-3 truncate" to={links.notionEdit(id)}>
+          <div className="truncate flex-1">
+            <Link className="ml-3 truncate block" to={links.notionEdit(id)}>
               {title}
             </Link>
           </div>

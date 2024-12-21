@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { TNotionItem } from "src/pages/Notion/NotionItem/NotionItem";
+import { TNotionListItem } from "src/pages/Notion/NotionListItem";
 import { AlignLeftIcon, EyeIcon } from "src/shared/ui/Icon";
 import { Tiptap } from "src/shared/ui/Tiptap/Tiptap";
 import { Layout } from "src/widgets/template/Layout";
@@ -10,7 +10,7 @@ const NOTION_TOKEN: string = import.meta.env.VITE_NOTION_TOKEN;
 
 export const NotionEdit = () => {
   const { id } = useParams();
-  const [data, setData] = useState<TNotionItem>();
+  const [data, setData] = useState<TNotionListItem>();
   const [title, setTitle] = useState("");
   const [editorContent, setEditorContent] = useState("");
 
@@ -133,7 +133,7 @@ export const NotionEdit = () => {
                       aria-selected="false"
                       className="tooltip cursor-pointer flex w-full items-center justify-center py-4"
                     >
-                      <AlignLeftIcon />
+                      <AlignLeftIcon className="mr-2 h-5 w-5" />
                       Контент
                     </span>
                   </button>

@@ -5,8 +5,8 @@ import {
   BookIcon,
   ChevronDownIcon,
   FileTextIcon,
+  GitBranchIcon,
   SettingsIcon,
-  UserCheckIcon,
   UserPlusIcon,
   UsersIcon,
 } from "src/shared/ui/Icon";
@@ -23,14 +23,14 @@ const navData = [
     icon: <UserPlusIcon />,
   },
   {
-    link: links.editPerson("zet"),
-    text: "Изменить",
-    icon: <UserCheckIcon />,
-  },
-  {
     link: links.allPersons,
     text: "Список",
     icon: <UsersIcon />,
+  },
+  {
+    link: links.forceGraph,
+    text: "2D графика",
+    icon: <GitBranchIcon />,
   },
   {
     link: links.notion,

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { NotionFilter } from "src/pages/Notion/NotionFilter";
-import { NotionItem } from "src/pages/Notion/NotionItem";
-import { TNotionItem } from "src/pages/Notion/NotionItem/NotionItem";
+import { NotionListItem, TNotionListItem } from "src/pages/Notion/NotionListItem";
 import { NotionMenu } from "src/pages/Notion/NotionMenu";
 import { HashIcon } from "src/shared/ui/Icon";
 import { Layout } from "src/widgets/template/Layout";
 
 export const Notion = () => {
-  const [data, setData] = useState<TNotionItem[]>([]);
+  const [data, setData] = useState<TNotionListItem[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,7 +95,7 @@ export const Notion = () => {
             </div>
             <div className="overflow-x-auto sm:overflow-x-visible">
               {data.map((item) => (
-                <NotionItem key={item.id} {...item} />
+                <NotionListItem key={item.id} {...item} />
               ))}
             </div>
             <div className="flex flex-col items-center p-5 text-center text-slate-500 sm:flex-row sm:text-left">
