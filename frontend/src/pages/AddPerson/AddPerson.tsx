@@ -103,13 +103,13 @@ function AddPerson() {
     UpdatePersonByID(mainPerson, mergedPersonsResult, "add")
       .then((item) => {
         reset(data);
-        navigate(`edit-person/${id}`);
         // eslint-disable-next-line no-console
         console.log(
           "%c Update person %c " + item + " ",
           "background: #aa0000; color: #fff; border-radius: 3px 0px 0px 3px; padding: 1px; font-size: 0.7rem",
           "background: #009900; color: #fff; border-radius: 0px 3px 3px 0px; padding: 1px; font-size: 0.7rem"
         );
+        navigate(`edit-person/${id}`);
       })
       // eslint-disable-next-line no-console
       .catch((errors) => console.log("Errors: Update person", errors));

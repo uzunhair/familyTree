@@ -36,7 +36,7 @@ export const ForceGraph = () => {
       },
       brotherAndSisterControl: {
         label: "Брат/Сестра",
-        value: true,
+        value: false,
       },
     },
     {}
