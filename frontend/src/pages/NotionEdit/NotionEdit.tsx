@@ -29,7 +29,7 @@ export const NotionEdit = () => {
     };
 
     try {
-      const response = await axios.post("https://v05.ru/api/notion/section/post", data, {
+      const response = await axios.post("https://api.v05.ru/api/notion/section/post", data, {
         headers: {
           Authorization: `Bearer ${NOTION_TOKEN}`,
         },
@@ -44,7 +44,7 @@ export const NotionEdit = () => {
     if (id) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`https://v05.ru/api/notion/section/${id}`);
+          const response = await axios.get(`https://api.v05.ru/api/notion/section/${id}`);
           setData(response.data);
           setTitle(response.data.title);
           setEditorContent(response.data.content);

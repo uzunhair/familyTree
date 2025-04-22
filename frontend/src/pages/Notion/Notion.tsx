@@ -12,7 +12,7 @@ export const Notion = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://v05.ru/api/notion/collection");
+        const response = await axios.get("https://api.v05.ru/api/notion/collection");
         setData(response.data);
       } catch (error) {
         console.warn("Error", error);

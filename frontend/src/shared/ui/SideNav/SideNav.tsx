@@ -33,6 +33,11 @@ const navData = [
     icon: <GitBranchIcon />,
   },
   {
+    link: links.forceGraph3d,
+    text: "3D графика",
+    icon: <GitBranchIcon />,
+  },
+  {
     link: links.notion,
     text: "Заметки",
     icon: <BookIcon />,

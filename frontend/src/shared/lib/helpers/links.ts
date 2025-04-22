@@ -4,6 +4,7 @@ export const links = {
   editPerson: (value: string) => `/edit-person/${value}`,
   allPersons: "/all-persons",
   forceGraph: "/force-graph",
+  forceGraph3d: "/force-graph3d",
   notion: "/notion",
   notionEdit: (value: number | string) => `/notion-edit/${value}`,
 };

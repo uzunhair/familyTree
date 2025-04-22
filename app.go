@@ -90,9 +90,31 @@ func (a *App) GetAllPerson() ([]BasicPersonInfo, error) {
 	return persons, nil
 }
 
+// Новая структура для хранения информации о человеке с объектами NameID
+type EnhancedPersonInfo struct {
+	ID         string   `json:"id"`
+	Title      string   `json:"title"`
+	Birthday   string   `json:"birthday"`
+	Gender     string   `json:"gender"`
+	Father     *NameID  `json:"father,omitempty"`
+	Mother     *NameID  `json:"mother,omitempty"`
+	Spouse     []string `json:"spouse"`
+	Friends    []string `json:"friends"`
+	Colleagues []string `json:"colleagues"`
+	Familiar   []string `json:"familiar"`
+	Comments   string   `json:"comments"`
+}
+
+// Пример структуры для хранения результата поиска
 type SearchResult struct {
-	Persons []types.FullPersonInfo `json:"persons"`
-	Count   int                    `json:"count"`
+	Persons []EnhancedPersonInfo `json:"persons"`
+	Count   int                  `json:"count"`
+}
+
+// Пример структуры для хранения имени и идентификатора
+type NameID struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
 }
 
 func (a *App) GetPersonList(search string) (SearchResult, error) {
@@ -105,28 +127,59 @@ func (a *App) GetPersonList(search string) (SearchResult, error) {
 		return SearchResult{}, fmt.Errorf("loaded persons is nil")
 	}
 
-	var persons []types.FullPersonInfo
+	// Создаем карту для быстрого поиска объектов NameID по идентификаторам
+	idToNameMap := make(map[string]NameID)
+	for _, person := range people {
+		idToNameMap[person.ID] = NameID{ID: person.ID, Title: person.Title}
+	}
+
+	var enhancedPersons []EnhancedPersonInfo
 	search = strings.ToLower(search)
 	for _, person := range people {
 		var title = strings.Contains(strings.ToLower(person.Title), search)
 		var ID = strings.Contains(strings.ToLower(person.ID), search)
 		var birthday = strings.Contains(strings.ToLower(person.Birthday), search)
-		fmt.Printf("--- %b --search %s title--%s id--%s birthday--%s \n", title, search, person.Title, person.ID, person.Birthday)
+
+		// Преобразуем FullPersonInfo в EnhancedPersonInfo
+		enhancedPerson := EnhancedPersonInfo{
+			ID:         person.ID,
+			Title:      person.Title,
+			Birthday:   person.Birthday,
+			Gender:     person.Gender,
+			Spouse:     person.Spouse,
+			Friends:    person.Friends,
+			Colleagues: person.Colleagues,
+			Familiar:   person.Familiar,
+			Comments:   person.Comments,
+		}
+
+		// Заменяем идентификаторы father и mother на объекты NameID
+		if fatherID := person.Father; fatherID != "" {
+			if fatherNameID, exists := idToNameMap[fatherID]; exists {
+				enhancedPerson.Father = &fatherNameID
+			}
+		}
+		if motherID := person.Mother; motherID != "" {
+			if motherNameID, exists := idToNameMap[motherID]; exists {
+				enhancedPerson.Mother = &motherNameID
+			}
+		}
+
 		if title || ID || birthday {
-			persons = append(persons, person)
+			enhancedPersons = append(enhancedPersons, enhancedPerson)
 		}
 	}
 
-	if len(persons) == 0 {
+	if len(enhancedPersons) == 0 {
 		return SearchResult{
-			Persons: []types.FullPersonInfo{},
+			Persons: []EnhancedPersonInfo{},
 			Count:   0,
 		}, nil
 	}
 
 	return SearchResult{
-		Persons: persons,
-		Count:   len(persons),
+		Persons: enhancedPersons,
+		Count:   len(enhancedPersons),
 	}, nil
 }
 
