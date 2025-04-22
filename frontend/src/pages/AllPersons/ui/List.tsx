@@ -73,7 +73,9 @@ export const List = ({ persons }: Props) => {
                 >
                   {item.mother && <div className="ml-3 h-2 w-2 rounded-full bg-success"></div>}
                 </td>
-                <td className="px-5 py-3 border-b dark:border-darkmode-300">{item.birthday}</td>
+                <td className="px-5 py-3 border-b dark:border-darkmode-300">
+                  {item.siblings?.length}
+                </td>
                 <td className="px-5 py-3 border-b dark:border-darkmode-300">{item.birthday}</td>
                 <td className="px-5 py-3 border-b dark:border-darkmode-300">{item.comments}</td>
                 <td className="px-5 py-3 border-b dark:border-darkmode-300">

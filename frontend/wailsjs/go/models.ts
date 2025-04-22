@@ -70,6 +70,7 @@ export namespace main {
     colleagues: string[];
     familiar: string[];
     comments: string;
+    siblings?: NameID[];
 
     static createFrom(source: any = {}) {
       return new EnhancedPersonInfo(source);
@@ -88,6 +89,7 @@ export namespace main {
       this.colleagues = source["colleagues"];
       this.familiar = source["familiar"];
       this.comments = source["comments"];
+      this.siblings = this.convertValues(source["siblings"], NameID);
     }
 
     convertValues(a: any, classs: any, asMap: boolean = false): any {

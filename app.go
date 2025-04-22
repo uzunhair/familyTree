@@ -90,7 +90,7 @@ func (a *App) GetAllPerson() ([]BasicPersonInfo, error) {
 	return persons, nil
 }
 
-// Новая структура для хранения информации о человеке с объектами NameID
+// EnhancedPersonInfo Новая структура для хранения информации о человеке с объектами NameID
 type EnhancedPersonInfo struct {
 	ID         string   `json:"id"`
 	Title      string   `json:"title"`
@@ -103,15 +103,16 @@ type EnhancedPersonInfo struct {
 	Colleagues []string `json:"colleagues"`
 	Familiar   []string `json:"familiar"`
 	Comments   string   `json:"comments"`
+	Siblings   []NameID `json:"siblings,omitempty"`
 }
 
-// Пример структуры для хранения результата поиска
+// SearchResult Пример структуры для хранения результата поиска
 type SearchResult struct {
 	Persons []EnhancedPersonInfo `json:"persons"`
 	Count   int                  `json:"count"`
 }
 
-// Пример структуры для хранения имени и идентификатора
+// NameID Пример структуры для хранения имени и идентификатора
 type NameID struct {
 	ID    string `json:"id"`
 	Title string `json:"title"`
@@ -162,6 +163,15 @@ func (a *App) GetPersonList(search string) (SearchResult, error) {
 		if motherID := person.Mother; motherID != "" {
 			if motherNameID, exists := idToNameMap[motherID]; exists {
 				enhancedPerson.Mother = &motherNameID
+			}
+		}
+
+		// Поиск людей с таким же father или mother
+		for _, otherPerson := range people {
+			if otherPerson.ID != person.ID &&
+				((otherPerson.Father == person.Father && person.Father != "") ||
+					(otherPerson.Mother == person.Mother && person.Mother != "")) {
+				enhancedPerson.Siblings = append(enhancedPerson.Siblings, NameID{ID: otherPerson.ID, Title: otherPerson.Title})
 			}
 		}
 

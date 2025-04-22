@@ -23,6 +23,7 @@ export type TPerson = {
   colleagues: string[];
   familiar: string[];
   comments: string;
+  siblings?: NameID[];
 };
 
 type SearchResult = {
