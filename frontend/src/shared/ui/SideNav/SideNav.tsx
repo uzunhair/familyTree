@@ -38,6 +38,11 @@ const navData = [
     icon: <GitBranchIcon />,
   },
   {
+    link: links.editGraph,
+    text: "Редактор графики",
+    icon: <GitBranchIcon />,
+  },
+  {
     link: links.notion,
     text: "Заметки",
     icon: <BookIcon />,

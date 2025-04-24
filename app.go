@@ -169,8 +169,8 @@ func (a *App) GetPersonList(search string) (SearchResult, error) {
 		// Поиск людей с таким же father или mother
 		for _, otherPerson := range people {
 			if otherPerson.ID != person.ID &&
-				((otherPerson.Father == person.Father && person.Father != "") ||
-					(otherPerson.Mother == person.Mother && person.Mother != "")) {
+					((otherPerson.Father == person.Father && person.Father != "") ||
+							(otherPerson.Mother == person.Mother && person.Mother != "")) {
 				enhancedPerson.Siblings = append(enhancedPerson.Siblings, NameID{ID: otherPerson.ID, Title: otherPerson.Title})
 			}
 		}
